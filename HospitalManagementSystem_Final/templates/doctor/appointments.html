@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2 style="text-align: center;">Appointments</h2>
+
+<!-- Square Back Button -->
+<div style="text-align: center; margin-bottom: 10px;">
+  <a href="{{ url_for('doctor_dashboard') }}" style="display: inline-block;
+      text-decoration: none;
+      border: 2px solid #6c63ff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background-color: #e6e6ff;
+      color: #6c63ff;
+      font-weight: bold;">
+    ← Back
+  </a>
+</div>
+
+<table style="margin: auto; border-collapse: collapse; width: 70%;">
+  <tr style="background-color: #d9f2f9;">
+    <th style="padding: 12px; border: 1px solid #ccc;">ID</th>
+    <th style="padding: 12px; border: 1px solid #ccc;">Patient</th>
+    <th style="padding: 12px; border: 1px solid #ccc;">Date</th>
+    <th style="padding: 12px; border: 1px solid #ccc;">Time</th>
+    <th style="padding: 12px; border: 1px solid #ccc;">Status</th>
+  </tr>
+  {% for appt in appointments %}
+  <tr style="text-align: center; 
+             {% if appt[4] == 'Expired' %}background-color: #ffcccc;{% endif %}">
+    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[0] }}</td>
+    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[1] }}</td>
+    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[2] }}</td>
+    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[3] }}</td>
+    <td style="padding: 10px; border: 1px solid #ccc;
+               font-weight: bold;
+               {% if appt[4] == 'Expired' %}color: red;{% else %}color: green;{% endif %}">
+      {{ appt[4] }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

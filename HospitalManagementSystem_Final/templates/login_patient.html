@@ -1,0 +1,130 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eaf7ff;
+  }
+  .container {
+    display: flex;
+    width: 100%;
+    min-height: 80vh;
+  }
+  .left-side {
+    flex: 1;
+    background: #d6efff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+    color: #003366;
+  }
+  .left-side h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  .left-side p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  .right-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8fcff;
+  }
+  .login-card {
+    background: #0a369d;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+    width: 70%;
+    max-width: 400px;
+    text-align: center;
+    color: white;
+  }
+  .login-card h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+  .login-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+  }
+  .login-card button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #0a369d;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .login-card button:hover {
+    background: #e0e0e0;
+  }
+  .login-card a {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #ddd;
+    text-decoration: none;
+  }
+  .login-card a:hover { text-decoration: underline; }
+  .flash {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+  }
+  .flash.danger { background: #ffdddd; color: #d8000c; }
+  .flash.success { background: #ddffdd; color: #4f8a10; }
+  @media (max-width: 768px) {
+    .container { flex-direction: column; }
+    .left-side, .right-side {
+      flex: none; width: 100%; height: auto; padding: 20px;
+    }
+    .login-card { width: 90%; }
+  }
+</style>
+
+<div class="container">
+  <!-- Left side -->
+  <div class="left-side">
+    <h1>Welcome Patient</h1>
+    <p>Login to manage your appointments, prescriptions, and medical history.</p>
+  </div>
+
+  <!-- Right side -->
+  <div class="right-side">
+    <div class="login-card">
+      <h2>Patient Login</h2>
+
+  
+
+      <!-- Login Form -->
+      <form method="POST" action="{{ url_for('login_patient') }}">
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <a href="#">Forgot Password?</a><br>
+      <a href="{{ url_for('index') }}">← Back</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

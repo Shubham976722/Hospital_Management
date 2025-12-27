@@ -1,0 +1,155 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!-- Main Login Container -->
+<div class="container homepage">
+    <h2 class="main-heading">Welcome to Hospital Management System</h2>
+
+    <div class="login-buttons">
+        <a href="{{ url_for('login_admin') }}" class="btn btn-admin">🛠 Admin Login</a>
+        <a href="{{ url_for('login_doctor') }}" class="btn btn-doctor">🩺 Doctor Login</a>
+        <a href="{{ url_for('login_patient') }}" class="btn btn-patient">👤 Patient Login</a>
+        <a href="{{ url_for('register_patient') }}" class="btn btn-register">📝 New Registration</a>
+    </div>
+</div>
+
+<!-- START: Inventory Section OUTSIDE main container -->
+<div class="info-wrapper">
+    <section class="info-section light-bg">
+        <div class="info-text">
+            <h2>Inventory Management</h2>
+            <p>Gain control over hospital resources with centralized inventory tracking.</p>
+            <p>From procurement to consumption, manage stock levels, supplier relationships, and interdepartmental
+                requisitions seamlessly.</p>
+        </div>
+        <div class="info-image">
+            <img src="{{ url_for('static', filename='images/inventory.png') }}" alt="Inventory Management">
+        </div>
+    </section>
+
+    <section class="info-section dark-bg">
+        <div class="info-image">
+            <img src="{{ url_for('static', filename='images/pharmacy.png') }}" alt="Pharmacy Management">
+        </div>
+        <div class="info-text">
+            <h2>Pharmacy Management</h2>
+            <p>Optimize inventory levels and ensure the availability of critical drugs with integrated pharmacy
+                management software.</p>
+            <p>Track billing, sales, prescriptions, and compliance with real-time stock monitoring and automated reorder
+                points.</p>
+        </div>
+    </section>
+
+    <section class="info-section light-bg">
+        <div class="info-text">
+            <h2>Operation Management</h2>
+            <p>Hospital managers are responsible for the daily operations of the hospital, including workflow
+                optimization, resource management, and technology implementation. </p>
+            <p>Example: Streamlining patient registration processes to reduce waiting times, ensuring adequate stock of
+                medical supplies and equipment.</p>
+        </div>
+        <div class="info-image">
+            <img src="{{ url_for('static', filename='images/operations.webp') }}" alt="Operation Management">
+        </div>
+    </section>
+
+    <section class="info-section dark-bg">
+        <div class="info-image">
+            <img src="{{ url_for('static', filename='images/lab.jpg') }}" alt="Laboratory Information Management System">
+        </div>
+        <div class="info-text">
+            <h2>Laboratory Information Management System</h2>
+            <p>Transforming complicated lab operation into intuitive workflows. With Healthary's LIMS Solution, it is easy
+                to boost the performance, revenue, and lab efficiency.</p>
+            <p>Seamlessly amalgamate with lab instructions and track information anywhere.</p>
+        </div>
+    </section>
+
+    <!-- START: Services Section -->
+    <section class="services-section">
+        <h2 class="services-title">MEDPLUS HELP YOU WITH <span class="highlight">NEUROLOGICAL</span> PROBLEMS.</h2>
+        <div class="services-grid">
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/brain.jpg') }}" alt="Neurological">
+                <h4>NEUROLOGICAL</h4>
+                <p>Focuses on diagnosing and treating disorders of nervous system including Brain and Spinal cord.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/heart.jpg') }}" alt="Cardiological">
+                <h4>CARDIOLOGICAL</h4>
+                <p>Encompasses the diagnosis, treatment, and prevention of Heart and Blood vessels.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/pharmacy1.jpg') }}" alt="Pharmacy">
+                <h4>PHARMACY</h4>
+                <p>A specialized department within a hospital responsible for managing medications.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/transport.jpg') }}" alt="Transport">
+                <h4>Surgical TRANSPORT</h4>
+                <p>Safe and efficient movement of patients, often critically ill.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/xray.jpg') }}" alt="X-ray">
+                <h4>X-RAY</h4>
+                <p>Painless test that captures images of structures inside the body, particularly bones.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/plaster.jpg') }}" alt="Plaster">
+                <h4>PLASTER</h4>
+                <p>Used to create casts and splints for immobilizing and supporting injured limbs.</p>
+            </div>
+            <div class="service-box">
+                <img src="{{ url_for('static', filename='images/tooth.jpg') }}" alt="Dietetics">
+                <h4>Dietetics</h4>
+                <p>Healthcare profession specialized in the science of nutrition.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- OUR MEDICS SECTION -->
+    <section class="medics-section">
+        <h2 class="medics-heading">OUR MEDICS <span class="highlight">GENERALIST</span></h2>
+        <img src="{{ url_for('static', filename='images/medics.jpg') }}" alt="Our Medics" class="medics-img">
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-column about">
+                <h2 class="footer-logo">Med<span class="plus">+</span></h2>
+                <p>Quisque non ullamcorper mauris. Sed vel pharetra nulla. Sed consectetur interdum lacinia. Mauris
+                    varius molestie dolor.</p>
+            </div>
+            <div class="footer-column services">
+                <h3>Our Services</h3>
+                <ul>
+                    <li>> Cardiology Service</li>
+                    <li>> X-Ray Service</li>
+                    <li>> Chirurgical Service</li>
+                    <li>> Neurological Service</li>
+                    <li>> Pharmacy Service</li>
+                    <li>> Pulmonary Service</li>
+                </ul>
+            </div>
+            <div class="footer-column blog">
+                <h3>From The Blog</h3>
+                <ul>
+                    <li>> Nursing Services Across The City</li>
+                    <li>> Emerging in Graves Disease</li>
+                    <li>> Tips for a Healthy, Safer Picnic</li>
+                    <li>> Having a Baby? 7 Questions</li>
+                    <li>> 4 Signs of Dehydration</li>
+                    <li>> Is There a Place for Medicine?</li>
+                </ul>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/its_sbm_1010/"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/in/shubham-mhaske-753a53269/"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.facebook.com/shubham.mhaske.334491"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/Shubham97033057"><i class="fab fa-twitter"></i></a>
+        </div>
+    </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h2 class="text-center text-2xl font-bold mb-4">Welcome {{ doctor.name }}</h2>
+
+  <div class="text-center mb-4">
+  <a href="{{ url_for('doctor_appointments') }}" class="btn btn-success mx-2">
+    <i class="fa fa-calendar"></i> View Appointments
+  </a>
+  <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-success mx-2">
+    <i class="fa fa-prescription-bottle-alt"></i> Write Prescription
+  </a>
+  <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-success mx-2">
+    <i class="fa fa-user-edit"></i> Update Profile
+  </a>
+  <a href="{{ url_for('logout_doctor') }}" class="btn btn-success mx-2">
+    <i class="fa fa-sign-out-alt"></i> Logout
+  </a>
+</div>
+
+{% endblock %}

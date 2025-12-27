@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Write Prescription</h2>
+<form method="POST">
+    <label>Patient:</label>
+    <select name="patient_id">
+        {% for p in patients %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+    </select><br>
+    <label>Diagnosis:</label>
+    <input type="text" name="diagnosis" required><br>
+    <label>Medicine:</label>
+    <input type="text" name="medicine" required><br>
+    <button type="submit">Submit</button>
+
+     <!-- Square Back Button -->
+<div style="text-align: center; margin-bottom: 10px;">
+  <a href="{{ url_for('doctor_dashboard') }}" style="display: inline-block;
+      text-decoration: none;
+      border: 2px solid #6c63ff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background-color: #e6e6ff;
+      color: #6c63ff;
+      font-weight: bold;">
+    ← Back
+  </a>
+</form>
+{% endblock %}
