@@ -1,0 +1,186 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Doctor | Hospital Management System</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #eaf7ff;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* LEFT SIDE */
+    .left-side {
+      flex: 1;
+      background: #d6efff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+      text-align: center;
+      color: #003366;
+    }
+
+    .left-side h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .left-side p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* RIGHT SIDE */
+    .right-side {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8fcff;
+    }
+
+    .form-card {
+      background: #0a369d;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+      width: 70%;
+      max-width: 420px;
+      text-align: center;
+      color: white;
+    }
+
+    .form-card h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .form-card input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+
+    .form-card button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #0a369d;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .form-card button:hover {
+      background: #e0e0e0;
+    }
+
+    .form-card a {
+      display: inline-block;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: #ddd;
+      text-decoration: none;
+    }
+
+    .form-card a:hover {
+      text-decoration: underline;
+    }
+
+    /* FLASH MESSAGES */
+    .flash {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .flash.success {
+      background: #ddffdd;
+      color: #4f8a10;
+    }
+
+    .flash.danger {
+      background: #ffdddd;
+      color: #d8000c;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .left-side, .right-side {
+        width: 100%;
+        padding: 20px;
+      }
+      .form-card { width: 90%; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LEFT INFO PANEL -->
+  <div class="left-side">
+    <h1>Add New Doctor</h1>
+    <p>
+      Register doctors to manage appointments, prescriptions, and patient care
+      efficiently through the system.
+    </p>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="right-side">
+    <div class="form-card">
+      <h2>Doctor Details</h2>
+
+      <!-- Add Doctor Form -->
+      <form method="POST">
+        <input type="text" name="name" placeholder="Doctor Name" required>
+        <input type="text" name="specialization" placeholder="Specialization" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="number" name="experience" placeholder="Experience (Years)" min="0" required>
+        <input type="tel" name="mobile" placeholder="Mobile Number"
+               pattern="[0-9]{10}" minlength="10" maxlength="10" required>
+
+        <button type="submit">Add Doctor</button>
+      </form>
+
+      <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
+{% endblock %}

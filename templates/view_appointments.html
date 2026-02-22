@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Appointments</title>
+    <br>
+    <!-- Square Back Button -->
+<div style="text-align: center; margin-bottom: 10px;">
+  <a href="{{ url_for('admin_dashboard') }}" style="display: inline-block;
+      text-decoration: none;
+      border: 2px solid #6c63ff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background-color: #e6e6ff;
+      color: #6c63ff;
+      font-weight: bold;">
+    ← Back
+  </a>
+</div>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .expired {
+            background-color: #ffdddd;
+        }
+    </style>
+</head>
+<body>
+    <h2>Appointments</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+        {% for appt in appointments %}
+        <tr class="{{ 'expired' if appt.status == 'Expired' else '' }}">
+            <td>{{ appt.id }}</td>
+            <td>{{ appt.patient_name }}</td>
+            <td>{{ appt.doctor_name }}</td>
+            <td>{{ appt.appointment_date }}</td>
+            <td>{{ appt.appointment_time }}</td>
+            <td>{{ appt.status }}</td>
+          </form>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+{% endblock %}

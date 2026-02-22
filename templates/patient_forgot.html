@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Reset Patient Password</h2>
+
+{% if msg %}
+<p>{{ msg }}</p>
+{% endif %}
+
+<form method="POST">
+
+  <label>Patient Name</label>
+  <input type="text" name="name" required>
+
+  <label>Date of Birth</label>
+  <input type="date" name="dob" required>
+
+  <label>New Password</label>
+  <input type="password" name="password" required>
+
+  <button type="submit">Reset Password</button>
+
+</form>
+
+<a href="{{ url_for('patient_login') }}">← Back to Login</a>
+
+{% endblock %}

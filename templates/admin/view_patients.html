@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <h2 style="text-align: center; font-weight: bold;">Registered Patients</h2>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <a href="{{ url_for('admin_dashboard') }}" 
+       style="display: inline-block;
+              padding: 10px 20px;
+              background-color: #6c63ff;
+              color: white;
+              border: none;
+              border-radius: 6px;
+              text-decoration: none;
+              font-weight: bold;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      ← Back
+    </a>
+  </div>
+
+  <table style="margin: 0 auto; border-collapse: collapse; width: 80%; background-color: white; font-size: 1.1rem; border: 1px solid #ccc;">
+    <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="border: 1px solid #ccc; padding: 10px;">ID</th>
+        <th style="border: 1px solid #ccc; padding: 10px;">Name</th>
+        <th style="border: 1px solid #ccc; padding: 10px;">Age</th>
+        <th style="border: 1px solid #ccc; padding: 10px;">Gender</th>
+        <th style="border: 1px solid #ccc; padding: 10px;">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for patient in patients %}
+      <tr>
+        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.id }}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.name }}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.age }}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.gender }}</td>
+        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.email }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

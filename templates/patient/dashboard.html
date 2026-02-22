@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2 class="text-center text-2xl font-bold mb-4">Welcome Mr. {{ patient.name }}</h2>
+<div class="text-center mb-4">
+    <a href="{{ url_for('update_profile') }}" class="btn btn-success mx-2">
+        <i class="fa fa-user-edit"></i> Update Profile
+    </a>
+    <a href="{{ url_for('book_appointment') }}" class="btn btn-success mx-2">
+        <i class="fa fa-calendar"></i> Book Appointment
+    </a>
+    <a href="{{ url_for('patient_payment') }}" class="btn btn-success mx-2">
+        <i class="fa fa-credit-card"></i> Make Payment
+    </a>
+    <a href="{{ url_for('logout_patient') }}" class="btn btn-success mx-2">
+        <i class="fa fa-sign-out-alt"></i> Logout
+    </a>
+    <br>
+    <br>
+    <p><strong>Email : </strong> {{ patient.email }}</p>
+            <p><strong>Age : </strong> {{ patient.age }}</p>
+            <p><strong>Gender : </strong> {{ patient.gender }}</p>
+            <p><strong>Date of Birth : </strong> {{ patient.dob }}</p>
+            <p><strong>Mobile Number :</strong> {{ patient.mobile }}</p>
+            <p><strong>Blood Group :</strong> {{ patient.blood_group }}</p>
+            <p><strong>Address :</strong> {{ patient.address}}</p>
+</div>
+
+{% endblock %}
+
+
+

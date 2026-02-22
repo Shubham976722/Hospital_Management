@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h2 class="text-center text-2xl font-bold mb-4">
+    Welcome {{ doctor['name'] }}
+  </h2>
+
+  <div class="text-center mb-4">
+    <a href="{{ url_for('doctor_appointments') }}" class="btn btn-success mx-2">
+      <i class="fa fa-calendar"></i> View Appointments
+    </a>
+    <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-success mx-2">
+      <i class="fa fa-prescription-bottle-alt"></i> Write Prescription
+    </a>
+    <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-success mx-2">
+      <i class="fa fa-user-edit"></i> Update Profile
+    </a>
+    <a href="{{ url_for('logout_doctor') }}" class="btn btn-success mx-2">
+      <i class="fa fa-sign-out-alt"></i> Logout
+      <br>
+    </a>
+  </div>
+
+  <div class="card p-4 shadow mb-4">
+    <h3 class="text-xl font-semibold mb-3">Your Profile</h3>
+
+    <p><strong>Name:</strong> {{ doctor['name'] }}</p>
+    <p><strong>Email:</strong> {{ doctor['email'] }}</p>
+    <p><strong>Specialization:</strong> {{ doctor['specialization'] }}</p>
+    <p><strong>Phone:</strong> {{ doctor['phone'] }}</p>
+
+    <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-primary mt-3">
+      Edit Profile
+    </a>
+  </div>
+{% endblock %}

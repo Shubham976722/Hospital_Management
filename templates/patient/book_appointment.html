@@ -1,0 +1,16 @@
+
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Book Appointment</h2>
+<form method="POST">
+    <label>Select Doctor</label>
+    <select name="doctor_id" required>
+        {% for doc in doctors %}
+        <option value="{{ doc.id }}">{{ doc.name }} ({{ doc.specialization }})</option>
+        {% endfor %}
+    </select>
+    <input type="date" name="date" required>
+    <input type="time" name="time" required>
+    <button type="submit">Book</button>
+</form>
+{% endblock %}

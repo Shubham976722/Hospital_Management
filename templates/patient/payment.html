@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container" style="max-width:600px; margin:auto; padding:20px;">
+    <h2>Make Payment</h2>
+    <form method="POST">
+
+        <!-- Appointment selection -->
+        <label for="appointment_id">Select Appointment:</label>
+        <select name="appointment_id" required>
+            {% for appt in appointments %}
+                <option value="{{ appt['id'] }}">
+                    Appointment ID {{ appt['id'] }} ({{ appt['appointment_date'] }} {{ appt['appointment_time'] }})
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- Amount -->
+        <label for="amount">Amount (₹):</label>
+        <input type="number" name="amount" required>
+        <br><br>
+
+        <!-- Method -->
+        <label for="method">Payment Method:</label>
+        <select name="method" id="method" required onchange="toggleFields()">
+            <option value="">-- Select --</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card</option>
+            <option value="Cash">Cash</option>
+        </select>
+        <br><br>
+
+        <!-- UPI field -->
+        <div id="upiFields" style="display:none;">
+            <label for="upi_id">UPI ID:</label>
+            <input type="text" name="upi_id" placeholder="example@upi">
+            <br><br>
+            <label for="transaction_id">Transaction ID:</label>
+            <input type="text" name="transaction_id">
+        </div>
+
+        <!-- Card field -->
+        <div id="cardFields" style="display:none;">
+            <label for="transaction_id">Transaction ID:</label>
+            <input type="text" name="transaction_id">
+        </div>
+
+        <br>
+        <button type="submit">Pay Now</button>
+    </form>
+</div>
+
+<script>
+function toggleFields() {
+    let method = document.getElementById("method").value;
+    document.getElementById("upiFields").style.display = (method === "UPI") ? "block" : "none";
+    document.getElementById("cardFields").style.display = (method === "Card") ? "block" : "none";
+}
+</script>
+{% endblock %}
