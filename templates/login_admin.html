@@ -1,145 +1,80 @@
 {% extends 'layout.html' %}
 
+{% block title %}Admin Sign In | MedCare+ Executive Portal{% endblock %}
+
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login | Hospital Management System</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #eaf7ff;
-    }
-    .container {
-      display: flex;
-      width: 100%;
-      height: 100%;
-    }
-    .left-side {
-      flex: 1;
-      background: #d6efff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px;
-      text-align: center;
-      color: #003366;
-    }
-    .left-side h1 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-    .left-side p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-    .right-side {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #f8fcff;
-    }
-    .login-card {
-      background: #0a369d;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-      width: 70%;
-      max-width: 400px;
-      text-align: center;
-      color: white;
-    }
-    .login-card h2 {
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-    }
-    .login-card input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 6px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-    }
-    .login-card button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #0a369d;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .login-card button:hover {
-      background: #e0e0e0;
-    }
-    .login-card a {
-      display: inline-block;
-      margin-top: 15px;
-      font-size: 0.9rem;
-      color: #ddd;
-      text-decoration: none;
-    }
-    .login-card a:hover { text-decoration: underline; }
-    .flash {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.95rem;
-    }
-    .flash.danger { background: #ffdddd; color: #d8000c; }
-    .flash.success { background: #ddffdd; color: #4f8a10; }
-    @media (max-width: 768px) {
-      .container { flex-direction: column; }
-      .left-side, .right-side {
-        flex: none; width: 100%; height: auto; padding: 20px;
-      }
-      .login-card { width: 90%; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Left side -->
-    <div class="left-side">
-      <h1>Welcome Admin</h1>
-      <p>Login to manage doctors, patients, and appointments efficiently.</p>
-    </div>
+<div class="auth-wrapper">
+  <div class="auth-container">
+    
+    <!-- Left Promotional / Info Sidebar -->
+    <div class="auth-sidebar" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem; background: linear-gradient(135deg, #4f46e5, #6366f1);">
+            <i class="fa fa-shield-halved"></i>
+          </div>
+          <span>MedCare+ Executive</span>
+        </div>
+        <h2 class="auth-sidebar-title">Hospital Administration & System Management</h2>
+        <p class="auth-sidebar-text">
+          Centralized administrative command suite for doctor onboarding, patient registries, appointment auditing, and transaction reconciliation.
+        </p>
 
-    <!-- Right side -->
-    <div class="right-side">
-      <div class="login-card">
-        <h2>Admin Login</h2>
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check" style="color: #a5b4fc;"></i> Comprehensive doctor & staff directory</li>
+          <li><i class="fa fa-circle-check" style="color: #a5b4fc;"></i> Patient records & medical history audit</li>
+          <li><i class="fa fa-circle-check" style="color: #a5b4fc;"></i> Financial ledger & payment verification</li>
+          <li><i class="fa fa-circle-check" style="color: #a5b4fc;"></i> Real-time appointment status control</li>
+        </ul>
+      </div>
 
-       
-
-        <!-- Login Form -->
-        <form method="POST" action="{{ url_for('login_admin') }}">
-          <input type="text" name="username" placeholder="Username" required>
-          <input type="password" name="password" placeholder="Password" required>
-          <button type="submit">Login</button>
-        </form>
-        <a href="#">Forgot Password?</a>
-        <br>
-         <a href="{{ url_for('index') }}">← Back</a>
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-lock"></i> Restricted Executive Access
       </div>
     </div>
-  </div>
-</body>
-</html>
 
+    <!-- Right Login Form -->
+    <div class="auth-main">
+      <div class="auth-header">
+        <!-- Role Switching Tabs -->
+        <div class="auth-role-tabs">
+          <a href="{{ url_for('login_patient') }}" class="auth-role-tab"><i class="fa fa-user"></i> Patient</a>
+          <a href="{{ url_for('login_doctor') }}" class="auth-role-tab"><i class="fa fa-user-doctor"></i> Doctor</a>
+          <a href="{{ url_for('login_admin') }}" class="auth-role-tab active" style="color: #4f46e5;"><i class="fa fa-shield-halved"></i> Admin</a>
+        </div>
+
+        <h1 class="auth-title">Administrator Sign In</h1>
+        <p class="auth-subtitle">Enter your system administrator credentials to access the hub.</p>
+      </div>
+
+      <!-- Login Form -->
+      <form method="POST" action="{{ url_for('login_admin') }}">
+        <div class="form-group">
+          <label class="form-label" for="username">Admin Username</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-user-shield input-icon"></i>
+            <input type="text" id="username" name="username" class="form-control" placeholder="admin" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Admin Password</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-lg" style="margin-top: 1rem; background: linear-gradient(135deg, #0f172a, #1e293b); color: #ffffff;">
+          <i class="fa fa-shield-halved"></i> Access Administration Hub
+        </button>
+      </form>
+
+      <div style="margin-top: 2rem; text-align: center;">
+        <a href="{{ url_for('index') }}" style="font-size: 0.8125rem; color: var(--text-muted);"><i class="fa fa-arrow-left"></i> Back to Homepage</a>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

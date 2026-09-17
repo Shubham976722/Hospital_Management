@@ -1,43 +1,106 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-  <h2 style="text-align: center; font-weight: bold;">Registered Patients</h2>
+{% block title %}Registered Patients Directory | MedCare+ Executive{% endblock %}
 
-  <div style="text-align: center; margin-bottom: 20px;">
-    <a href="{{ url_for('admin_dashboard') }}" 
-       style="display: inline-block;
-              padding: 10px 20px;
-              background-color: #6c63ff;
-              color: white;
-              border: none;
-              border-radius: 6px;
-              text-decoration: none;
-              font-weight: bold;
-              box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-      ← Back
-    </a>
+{% block content %}
+<div class="main-content">
+  
+  <!-- Dashboard Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #0f172a);">
+        <i class="fa fa-users"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Registered Patients Directory</h1>
+        <div class="dashboard-role-badge">
+          <i class="fa fa-database"></i> Live Hospital Patient Registry
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <a href="{{ url_for('view_appointments') }}" class="btn btn-outline">
+        <i class="fa fa-calendar-days"></i> Appointments
+      </a>
+      <a href="{{ url_for('view_payments') }}" class="btn btn-outline">
+        <i class="fa fa-credit-card"></i> Payments
+      </a>
+    </div>
   </div>
 
-  <table style="margin: 0 auto; border-collapse: collapse; width: 80%; background-color: white; font-size: 1.1rem; border: 1px solid #ccc;">
-    <thead>
-      <tr style="background-color: #f2f2f2;">
-        <th style="border: 1px solid #ccc; padding: 10px;">ID</th>
-        <th style="border: 1px solid #ccc; padding: 10px;">Name</th>
-        <th style="border: 1px solid #ccc; padding: 10px;">Age</th>
-        <th style="border: 1px solid #ccc; padding: 10px;">Gender</th>
-        <th style="border: 1px solid #ccc; padding: 10px;">Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for patient in patients %}
-      <tr>
-        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.id }}</td>
-        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.name }}</td>
-        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.age }}</td>
-        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.gender }}</td>
-        <td style="border: 1px solid #ccc; padding: 10px;">{{ patient.email }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <!-- Patients Data Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-hospital-user" style="color: var(--primary);"></i> Patient Profiles ({{ patients|length }} Registered)
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        <i class="fa fa-shield-halved text-emerald-500"></i> Encrypted Health Records
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Patient ID</th>
+            <th>Full Name</th>
+            <th>Age & Gender</th>
+            <th>Blood Group</th>
+            <th>Contact Number</th>
+            <th>Email Address</th>
+            <th>Location / Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for patient in patients %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary);">#PAT-{{ patient['id'] }}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem;">
+                  {{ patient['name'][:2] }}
+                </div>
+                <div style="font-weight: 700; color: var(--text-main);">{{ patient['name'] }}</div>
+              </div>
+            </td>
+            <td>
+              <span style="color: var(--text-main); font-weight: 600;">{{ patient['age'] }} Yrs</span>
+              <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">{{ patient['gender'] }}</span>
+            </td>
+            <td>
+              <span class="badge" style="background: #fee2e2; color: #e11d48; font-weight: 800;">
+                <i class="fa fa-droplet"></i> {{ patient['blood_group'] if patient['blood_group'] else 'N/A' }}
+              </span>
+            </td>
+            <td>
+              <span style="font-family: monospace; color: var(--text-muted);">+91 {{ patient['mobile'] }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-muted);">{{ patient['email'] }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-muted); font-size: 0.8125rem;">{{ patient['address'] if patient['address'] else '-' }}</span>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-users-slash" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              No registered patients found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Receipt #{{ invoice['id'] }} - {{ invoice['patient_name'] }} | MedCare+ Hospital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; }
+    body { background: #f1f5f9; padding: 2rem; color: #0f172a; display: flex; justify-content: center; }
+    
+    .invoice-sheet {
+      width: 100%;
+      max-width: 780px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 3rem;
+      border: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #0284c7;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hospital-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hospital-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border-radius: 10px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+
+    .invoice-title-block {
+      text-align: right;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+    }
+
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    .meta-box h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+    }
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+      font-size: 0.875rem;
+    }
+
+    .invoice-table th {
+      background: #f0f9ff;
+      color: #0369a1;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #bae6fd;
+      text-align: left;
+    }
+
+    .invoice-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: #1e293b;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2rem;
+    }
+
+    .total-box {
+      width: 280px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+
+    .total-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .total-grand {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1.5px solid #0284c7;
+      padding-top: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .sheet-footer {
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+
+    .print-actions {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 0.75rem;
+      z-index: 100;
+    }
+
+    .btn-action {
+      background: #0284c7;
+      color: #ffffff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-action:hover { background: #0369a1; }
+
+    @media print {
+      body { background: #ffffff; padding: 0; }
+      .invoice-sheet { box-shadow: none; border: none; padding: 1.5cm; }
+      .print-actions { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Actions -->
+  <div class="print-actions">
+    <button onclick="window.print()" class="btn-action">
+      <i class="fa fa-print"></i> Print Invoice
+    </button>
+    <a href="javascript:window.close()" class="btn-action" style="background: #64748b;">
+      <i class="fa fa-xmark"></i> Close
+    </a>
+  </div>
+
+  <div class="invoice-sheet">
+    
+    <!-- Top Hospital Letterhead -->
+    <div class="invoice-header">
+      <div class="hospital-brand">
+        <div class="hospital-logo">
+          <i class="fa fa-hospital"></i>
+        </div>
+        <div>
+          <h1 style="font-size: 1.4rem; font-weight: 800; color: #0f172a;">
+            MedCare+ <span style="color: #0284c7;">Hospital</span>
+          </h1>
+          <p style="font-size: 0.75rem; color: #64748b;">Medical Invoicing & Cashless Reconciliation Desk</p>
+          <p style="font-size: 0.75rem; color: #94a3b8;">Jalna, Maharashtra • GSTIN: 27AAAAA0000A1Z5</p>
+        </div>
+      </div>
+
+      <div class="invoice-title-block">
+        <span style="background: #ecfdf5; color: #065f46; font-size: 0.75rem; font-weight: 800; padding: 0.25rem 0.65rem; border-radius: 99px; border: 1px solid #a7f3d0;">
+          <i class="fa fa-circle-check"></i> PAYMENT COMPLETED
+        </span>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-top: 0.4rem;">
+          Receipt #REC-{{ invoice['id'] }}
+        </h2>
+        <p style="font-size: 0.75rem; color: #64748b;">Date: {{ invoice['created_at'] }}</p>
+      </div>
+    </div>
+
+    <!-- Meta Details Grid -->
+    <div class="meta-grid">
+      <div class="meta-box">
+        <h4>Billed To (Patient)</h4>
+        <strong style="font-size: 1rem; color: #0f172a; display: block; margin-bottom: 0.25rem;">{{ invoice['patient_name'] }}</strong>
+        <p style="color: #64748b; font-size: 0.8125rem;">Patient ID: #PAT-{{ invoice['patient_id'] }}</p>
+        <p style="color: #64748b; font-size: 0.8125rem;">Email: {{ invoice['patient_email'] }}</p>
+        <p style="color: #64748b; font-size: 0.8125rem;">Phone: +91 {{ invoice['patient_mobile'] }}</p>
+      </div>
+
+      <div class="meta-box">
+        <h4>Payment & Consultation Details</h4>
+        <p style="color: #1e293b; font-weight: 600;">Method: <strong>{{ invoice['method'] }}</strong></p>
+        <p style="color: #64748b; font-size: 0.8125rem;">
+          Reference ID: <span style="font-family: monospace;">{{ invoice['transaction_id'] if invoice['transaction_id'] else (invoice['upi_id'] if invoice['upi_id'] else 'Direct Counter Cash') }}</span>
+        </p>
+        <p style="color: #64748b; font-size: 0.8125rem;">
+          Doctor: {{ invoice['doctor_name'] if invoice['doctor_name'] else 'General OPD Department' }}
+        </p>
+        <p style="color: #64748b; font-size: 0.8125rem;">
+          Appointment Token: #APT-{{ invoice['appointment_id'] if invoice['appointment_id'] else '-' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Itemized Table -->
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>Description of Service</th>
+          <th>Department</th>
+          <th style="text-align: right;">Amount (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Doctor OPD Consultation Fee</strong>
+            <p style="font-size: 0.75rem; color: #64748b;">Scheduled Consultation & Medical Evaluation</p>
+          </td>
+          <td>{{ invoice['specialization'] if invoice['specialization'] else 'General Medicine' }}</td>
+          <td style="text-align: right; font-weight: 700;">₹{{ invoice['amount'] }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Total Breakdown -->
+    <div class="total-row">
+      <div class="total-box">
+        <div class="total-line">
+          <span>Subtotal:</span>
+          <span>₹{{ invoice['amount'] }}</span>
+        </div>
+        <div class="total-line">
+          <span>Hospital Care Tax / GST (0%):</span>
+          <span>₹0</span>
+        </div>
+        <div class="total-grand">
+          <span>Total Paid:</span>
+          <span style="color: #059669;">₹{{ invoice['amount'] }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="sheet-footer">
+      <div>
+        <span>Computer generated receipt. No physical signature required.</span>
+      </div>
+      <div>
+        <span style="color: #10b981; font-weight: 700;"><i class="fa fa-shield-check"></i> 100% Cashless Verified</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
+

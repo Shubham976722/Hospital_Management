@@ -1,147 +1,140 @@
 {% extends 'layout.html' %}
 
+{% block title %}Patient Registration | MedCare+ Hospital{% endblock %}
+
 {% block content %}
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #eaf7ff;
-  }
-  .container {
-    display: flex;
-    width: 100%;
-    min-height: calc(100vh - 70px); /* leaves space for navbar */
-    margin-top: 70px; /* pushes content below navbar */
-  }
-  .left-side {
-    flex: 1;
-    background: #d6efff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    text-align: center;
-    color: #003366;
-  }
-  .left-side h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  .left-side p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  .right-side {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f8fcff;
-  }
-  .register-card {
-    background: #0a369d;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-    width: 80%;
-    max-width: 500px;
-    text-align: center;
-    color: white;
-  }
-  .register-card h2 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-  }
-  .register-card input,
-  .register-card select,
-  .register-card textarea {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-  }
-  .register-card button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #0a369d;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .register-card button:hover {
-    background: #e0e0e0;
-  }
-  .register-card a {
-    display: inline-block;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #ddd;
-    text-decoration: none;
-  }
-  .register-card a:hover { text-decoration: underline; }
-  @media (max-width: 768px) {
-    .container { flex-direction: column; margin-top: 60px; }
-    .left-side, .right-side {
-      flex: none; width: 100%; height: auto; padding: 20px;
-    }
-    .register-card { width: 95%; }
-  }
-</style>
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 1050px;">
+    
+    <!-- Left Promotional / Info Sidebar -->
+    <div class="auth-sidebar">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem;">
+            <i class="fa fa-hospital-user"></i>
+          </div>
+          <span>MedCare+ Health</span>
+        </div>
+        <h2 class="auth-sidebar-title">Join Our Healthcare Network</h2>
+        <p class="auth-sidebar-text">
+          Create your patient profile to seamlessly book specialist appointments, receive e-prescriptions, track diagnostic tests, and make cashless payments.
+        </p>
 
-<div class="container">
-  <!-- Left side -->
-  <div class="left-side">
-    <h1>Welcome Patient</h1>
-    <p>Create your account to book appointments, manage health records, and access hospital services easily.</p>
-  </div>
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check"></i> Instant digital patient registration</li>
+          <li><i class="fa fa-circle-check"></i> Lifetime medical history records</li>
+          <li><i class="fa fa-circle-check"></i> Blood Group & Emergency Health ID</li>
+          <li><i class="fa fa-circle-check"></i> SMS & Email appointment reminders</li>
+        </ul>
+      </div>
 
-  <!-- Right side -->
-  <div class="right-side">
-    <div class="register-card">
-      <h2>Patient Registration</h2>
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-shield-halved"></i> HIPAA & NABH Standard Compliant
+      </div>
+    </div>
+
+    <!-- Right Registration Form -->
+    <div class="auth-main">
+      <div class="auth-header" style="margin-bottom: 1.5rem;">
+        <h1 class="auth-title">New Patient Registration</h1>
+        <p class="auth-subtitle">Please enter your accurate personal and medical details.</p>
+      </div>
 
       <!-- Registration Form -->
       <form method="POST" action="{{ url_for('register_patient') }}">
-        <input type="text" name="name" placeholder="Full Name" required>
-        <input type="number" name="age" placeholder="Age" min="0" max="120" required>
-        <input type="date" name="dob" required>
-        
-        <select name="gender" required>
-          <option value="">Select Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-user input-icon"></i>
+              <input type="text" id="name" name="name" class="form-control" placeholder="John Doe" required>
+            </div>
+          </div>
 
-        <input type="tel" name="mobile" placeholder="10-digit Mobile Number" 
-               pattern="[0-9]{10}" minlength="10" maxlength="10" required>
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-envelope input-icon"></i>
+              <input type="email" id="email" name="email" class="form-control" placeholder="john@example.com" required>
+            </div>
+          </div>
+        </div>
 
-        <select name="blood_group" required>
-          <option value="">Select Blood Group</option>
-          <option>A+</option><option>A-</option>
-          <option>B+</option><option>B-</option>
-          <option>O+</option><option>O-</option>
-          <option>AB+</option><option>AB-</option>
-        </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="mobile">Mobile Number (10 Digits)</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-phone input-icon"></i>
+              <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" minlength="10" maxlength="10" required>
+            </div>
+          </div>
 
-        <textarea name="address" rows="3" placeholder="Full Address" required></textarea>
+          <div class="form-group">
+            <label class="form-label" for="password">Create Password</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-lock input-icon"></i>
+              <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+          </div>
+        </div>
 
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <div class="form-row" style="grid-template-columns: 1fr 1fr 1fr;">
+          <div class="form-group">
+            <label class="form-label" for="age">Age</label>
+            <input type="number" id="age" name="age" class="form-control" placeholder="32" min="0" max="120" required>
+          </div>
 
-        <button type="submit">Register</button>
+          <div class="form-group">
+            <label class="form-label" for="gender">Gender</label>
+            <select id="gender" name="gender" class="form-control" required>
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="blood_group">Blood Group</label>
+            <select id="blood_group" name="blood_group" class="form-control" required>
+              <option value="">-- Select --</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="address">Full Address / Location</label>
+            <input type="text" id="address" name="address" class="form-control" placeholder="Street, City, District" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <i class="fa fa-user-check"></i> Complete Registration
+        </button>
       </form>
 
-      <a href="{{ url_for('index') }}">← Back</a>
+      <div style="margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 1.25rem;">
+        Already registered? <a href="{{ url_for('login_patient') }}" style="color: var(--primary); font-weight: 700;">Sign In Here</a>
+      </div>
+      <div style="margin-top: 0.5rem; text-align: center;">
+        <a href="{{ url_for('index') }}" style="font-size: 0.8125rem; color: var(--text-muted);"><i class="fa fa-arrow-left"></i> Back to Homepage</a>
+      </div>
     </div>
+
   </div>
 </div>
 {% endblock %}

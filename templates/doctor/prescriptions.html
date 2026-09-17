@@ -1,137 +1,113 @@
 {% extends "layout.html" %}
 
+{% block title %}Digital Prescription Pad | MedCare+ Clinician{% endblock %}
+
 {% block content %}
-<style>
-  .container {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    min-height: 90vh;
-  }
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 950px;">
+    
+    <!-- Left Info Sidebar -->
+    <div class="auth-sidebar" style="background: linear-gradient(135deg, #0c4a6e 0%, #064e3b 100%);">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem; background: #059669;">
+            <i class="fa fa-prescription"></i>
+          </div>
+          <span>Clinical e-Rx Desk</span>
+        </div>
+        <h2 class="auth-sidebar-title">Electronic Prescription Pad</h2>
+        <p class="auth-sidebar-text">
+          Issue validated medical diagnoses, clinical instructions, and drug dosages. Prescriptions are instantly archived in the patient's digital record and ready for 1-click printable format.
+        </p>
 
-  .left-side {
-    flex: 1;
-    background: #d6efff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    text-align: center;
-    color: #003366;
-  }
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check" style="color: #6ee7b7;"></i> Direct linkage to booked patient chart</li>
+          <li><i class="fa fa-circle-check" style="color: #6ee7b7;"></i> Clear dosage instructions (Morning / Afternoon / Night)</li>
+          <li><i class="fa fa-circle-check" style="color: #6ee7b7;"></i> Auto-completes active appointment queue</li>
+          <li><i class="fa fa-circle-check" style="color: #6ee7b7;"></i> Instant printable hospital letterhead</li>
+        </ul>
+      </div>
 
-  .left-side h1 {
-    font-size: 2rem;
-    margin-bottom: 15px;
-  }
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-shield-halved"></i> Valid Digital Medical Signature • MedCare+ Health
+      </div>
+    </div>
 
-  .left-side p {
-    font-size: 1.05rem;
-  }
+    <!-- Right Prescription Form -->
+    <div class="auth-main">
+      
+      {% if appointment_id %}
+      <div style="background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 10px; padding: 0.85rem 1.15rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+        <i class="fa fa-calendar-check" style="color: #0284c7; font-size: 1.25rem;"></i>
+        <div style="font-size: 0.8125rem; color: #0369a1;">
+          <strong>Linked Consultation:</strong> Issuing prescription for <strong>#APT-{{ appointment_id }}</strong>. This appointment will automatically be marked <strong>Completed</strong> upon dispatch.
+        </div>
+      </div>
+      {% endif %}
 
-  .right-side {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f8fcff;
-  }
-
-  .form-card {
-    background: #0a369d;
-    padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    width: 75%;
-    max-width: 450px;
-    color: white;
-  }
-
-  .form-card h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .form-card label {
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-
-  .form-card input,
-  .form-card select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    margin-bottom: 10px;
-    outline: none;
-  }
-
-  .form-card button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #0a369d;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-
-  .form-card button:hover {
-    background: #e0e0e0;
-  }
-
-  .back-link {
-    display: block;
-    text-align: center;
-    margin-top: 12px;
-    text-decoration: none;
-    color: #ddd;
-  }
-
-  .back-link:hover {
-    text-decoration: underline;
-  }
-</style>
-
-<div class="container">
-
-  <!-- Left Info Section -->
-  <div class="left-side">
-    <h1>Write Prescription</h1>
-    <p>Record diagnoses, prescribe medicines, and keep patient records accurate.</p>
-  </div>
-
-  <!-- Right Form Section -->
-  <div class="right-side">
-    <div class="form-card">
-      <h2>Prescription Form</h2>
+      <div class="auth-header" style="margin-bottom: 1.5rem;">
+        <h1 class="auth-title">Write Digital Prescription</h1>
+        <p class="auth-subtitle">Select the patient and specify the clinical diagnosis and medicine regimen.</p>
+      </div>
 
       <form method="POST">
-        <label>Patient</label>
-        <select name="patient_id">
-          {% for p in patients %}
-          <option value="{{ p.id }}">{{ p.name }}</option>
-          {% endfor %}
-        </select>
+        <div class="form-group">
+          <label class="form-label" for="patient_id">Select Patient</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-user-injured input-icon"></i>
+            <select id="patient_id" name="patient_id" class="form-control" required style="padding-left: 2.75rem;">
+              <option value="">-- Choose Patient --</option>
+              {% for p in patients %}
+                {% set pid = p['id'] if p['id'] is defined else p[0] %}
+                {% set pname = p['name'] if p['name'] is defined else p[1] %}
+                {% set pgender = p['gender'] if p['gender'] is defined else p[2] %}
+                {% set page = p['age'] if p['age'] is defined else p[3] %}
+                <option value="{{ pid }}" {% if selected_patient_id and selected_patient_id == pid %}selected{% endif %}>
+                  {{ pname }} (#PAT-{{ pid }}) • {{ page }}Y / {{ pgender }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
 
-        <label>Diagnosis</label>
-        <input type="text" name="diagnosis" required>
+        <div class="form-group">
+          <label class="form-label" for="diagnosis">Clinical Diagnosis / Symptoms</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-notes-medical input-icon"></i>
+            <input type="text" id="diagnosis" name="diagnosis" class="form-control" placeholder="e.g. Acute Viral Bronchitis, Hypertension Stage 1" required>
+          </div>
+        </div>
 
-        <label>Medicine</label>
-        <input type="text" name="medicine" required>
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="form-label" for="medicine" style="margin-bottom: 0;">Prescribed Medication & Dosage</label>
+            <div style="display: flex; gap: 0.35rem;">
+              <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" onclick="addSnippet('Tab Paracetamol 650mg - 1 Tab [1-0-1] after meals x 3 days\n')">+ Paracetamol</button>
+              <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" onclick="addSnippet('Tab Amoxicillin 500mg - 1 Cap [1-0-1] after food x 5 days\n')">+ Antibiotic</button>
+              <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" onclick="addSnippet('Tab Pantoprazole 40mg - 1 Tab [1-0-0] before breakfast x 7 days\n')">+ Antacid</button>
+            </div>
+          </div>
+          <textarea id="medicine" name="medicine" class="form-control" placeholder="e.g.&#10;1. Tab Paracetamol 650mg - 1 tablet three times a day after meals x 3 days&#10;2. Tab Cetirizine 10mg - 1 tablet at bedtime x 5 days&#10;3. Advice: Warm water steam inhalation twice daily." rows="5" required></textarea>
+        </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <i class="fa fa-paper-plane"></i> Issue & Dispatch Prescription
+        </button>
       </form>
 
-      <a class="back-link" href="{{ url_for('doctor_dashboard') }}">← Back to Dashboard</a>
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="{{ url_for('doctor_appointments') }}" style="font-size: 0.8125rem; color: var(--text-muted);"><i class="fa fa-arrow-left"></i> Return to Appointments Schedule</a>
+      </div>
     </div>
-  </div>
 
+  </div>
 </div>
+
+<script>
+function addSnippet(text) {
+  const textarea = document.getElementById('medicine');
+  textarea.value += text;
+  textarea.focus();
+}
+</script>
 {% endblock %}

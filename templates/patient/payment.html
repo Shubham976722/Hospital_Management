@@ -1,60 +1,152 @@
 {% extends "layout.html" %}
+
+{% block title %}Hospital Billing & Cashless Payment | MedCare+{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width:600px; margin:auto; padding:20px;">
-    <h2>Make Payment</h2>
-    <form method="POST">
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 950px;">
+    
+    <!-- Left Sidebar -->
+    <div class="auth-sidebar" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem; background: #d97706;">
+            <i class="fa fa-credit-card"></i>
+          </div>
+          <span>Cashless Billing Desk</span>
+        </div>
+        <h2 class="auth-sidebar-title">Secure Cashless Hospital Payments</h2>
+        <p class="auth-sidebar-text">
+          Pay your consultation fees, diagnostic tests, or pharmacy bills securely using UPI (Google Pay, PhonePe, Paytm), Credit/Debit Card, or at the hospital cash counter.
+        </p>
 
-        <!-- Appointment selection -->
-        <label for="appointment_id">Select Appointment:</label>
-        <select name="appointment_id" required>
-            {% for appt in appointments %}
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check" style="color: #fbbf24;"></i> Instant payment reconciliation</li>
+          <li><i class="fa fa-circle-check" style="color: #fbbf24;"></i> Digital receipt generation</li>
+          <li><i class="fa fa-circle-check" style="color: #fbbf24;"></i> Link directly to scheduled appointment ID</li>
+          <li><i class="fa fa-circle-check" style="color: #fbbf24;"></i> 100% Encrypted bank gateway processing</li>
+        </ul>
+      </div>
+
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-shield-halved"></i> PCI-DSS Level 1 Certified Transactions
+      </div>
+    </div>
+
+    <!-- Right Payment Form -->
+    <div class="auth-main">
+      <div class="auth-header" style="margin-bottom: 1.5rem;">
+        <h1 class="auth-title">Make Bill Payment</h1>
+        <p class="auth-subtitle">Select your appointment and preferred payment method.</p>
+      </div>
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="appointment_id">Select Appointment to Settle</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-calendar-check input-icon"></i>
+            <select id="appointment_id" name="appointment_id" class="form-control" required style="padding-left: 2.75rem;">
+              <option value="">-- Choose Appointment --</option>
+              {% for appt in appointments %}
                 <option value="{{ appt['id'] }}">
-                    Appointment ID {{ appt['id'] }} ({{ appt['appointment_date'] }} {{ appt['appointment_time'] }})
+                  Appointment #APT-{{ appt['id'] }} ({{ appt['appointment_date'] }} @ {{ appt['appointment_time'] }})
                 </option>
-            {% endfor %}
-        </select>
-        <br><br>
-
-        <!-- Amount -->
-        <label for="amount">Amount (₹):</label>
-        <input type="number" name="amount" required>
-        <br><br>
-
-        <!-- Method -->
-        <label for="method">Payment Method:</label>
-        <select name="method" id="method" required onchange="toggleFields()">
-            <option value="">-- Select --</option>
-            <option value="UPI">UPI</option>
-            <option value="Card">Card</option>
-            <option value="Cash">Cash</option>
-        </select>
-        <br><br>
-
-        <!-- UPI field -->
-        <div id="upiFields" style="display:none;">
-            <label for="upi_id">UPI ID:</label>
-            <input type="text" name="upi_id" placeholder="example@upi">
-            <br><br>
-            <label for="transaction_id">Transaction ID:</label>
-            <input type="text" name="transaction_id">
+              {% else %}
+                <option value="" disabled>No appointments found to pay for</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
 
-        <!-- Card field -->
-        <div id="cardFields" style="display:none;">
-            <label for="transaction_id">Transaction ID:</label>
-            <input type="text" name="transaction_id">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="amount">Billing Amount (₹)</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-indian-rupee-sign input-icon"></i>
+              <input type="number" id="amount" name="amount" class="form-control" placeholder="500" min="1" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="method">Payment Method</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-wallet input-icon"></i>
+              <select name="method" id="method" class="form-control" required onchange="toggleFields()" style="padding-left: 2.75rem;">
+                <option value="">-- Select Method --</option>
+                <option value="UPI">UPI (Google Pay, PhonePe, Paytm)</option>
+                <option value="Card">Debit / Credit Card</option>
+                <option value="Cash">Cash at Reception Desk</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <br>
-        <button type="submit">Pay Now</button>
-    </form>
+        <!-- Dynamic UPI Fields -->
+        <div id="upiFields" style="display:none; background: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-weight: 700; color: var(--secondary); font-size: 0.85rem;">
+            <i class="fa fa-mobile-screen-button text-emerald-600"></i> UPI Payment Details
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label class="form-label" for="upi_id">Your UPI ID (VPA)</label>
+            <input type="text" id="upi_id" name="upi_id" class="form-control" placeholder="name@oksbi or name@paytm">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="upi_transaction_id">UPI Ref / Transaction UTR</label>
+            <input type="text" id="upi_transaction_id" name="transaction_id" class="form-control" placeholder="12-digit UTR number">
+          </div>
+        </div>
+
+        <!-- Dynamic Card Fields -->
+        <div id="cardFields" style="display:none; background: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 1.25rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; font-weight: 700; color: var(--secondary); font-size: 0.85rem;">
+            <i class="fa fa-credit-card text-blue-600"></i> Card Payment Reference
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="card_transaction_id">Bank Reference / Approval Code</label>
+            <input type="text" id="card_transaction_id" name="transaction_id" class="form-control" placeholder="e.g. TXN-CARD-99214">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 0.5rem;">
+          <i class="fa fa-lock"></i> Process & Pay Bill
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="{{ url_for('patient_dashboard') }}" style="font-size: 0.8125rem; color: var(--text-muted);">
+          <i class="fa fa-arrow-left"></i> Return to Patient Portal
+        </a>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
 function toggleFields() {
     let method = document.getElementById("method").value;
-    document.getElementById("upiFields").style.display = (method === "UPI") ? "block" : "none";
-    document.getElementById("cardFields").style.display = (method === "Card") ? "block" : "none";
+    let upiBox = document.getElementById("upiFields");
+    let cardBox = document.getElementById("cardFields");
+    
+    let upiTxn = document.getElementById("upi_transaction_id");
+    let cardTxn = document.getElementById("card_transaction_id");
+
+    if (method === "UPI") {
+        upiBox.style.display = "block";
+        cardBox.style.display = "none";
+        upiTxn.disabled = false;
+        cardTxn.disabled = true;
+    } else if (method === "Card") {
+        upiBox.style.display = "none";
+        cardBox.style.display = "block";
+        upiTxn.disabled = true;
+        cardTxn.disabled = false;
+    } else {
+        upiBox.style.display = "none";
+        cardBox.style.display = "none";
+        upiTxn.disabled = true;
+        cardTxn.disabled = true;
+    }
 }
 </script>
 {% endblock %}

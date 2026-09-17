@@ -1,35 +1,117 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
+
+{% block title %}Hospital Payments & Financial Ledger | MedCare+ Executive{% endblock %}
+
 {% block content %}
-<h2 style="text-align:center;">All Payments</h2>
-<div style="text-align: center; margin-bottom: 20px;">
-    <a href="{{ url_for('admin_dashboard') }}" 
-       style="display: inline-block;
-              padding: 10px 20px;
-              background-color: #6c63ff;
-              color: white;
-              border: none;
-              border-radius: 6px;
-              text-decoration: none;
-              font-weight: bold;
-              box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-      ← Back
-    </a>
+<div class="main-content">
+  
+  <!-- Dashboard Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #d97706, #0f172a);">
+        <i class="fa fa-money-bill-wave"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Payment Transactions & Financial Ledger</h1>
+        <div class="dashboard-role-badge" style="background: #fef3c7; color: #b45309;">
+          <i class="fa fa-receipt"></i> Verified Billing Ledger
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <a href="{{ url_for('view_patients') }}" class="btn btn-outline">
+        <i class="fa fa-users"></i> Patients
+      </a>
+      <a href="{{ url_for('view_appointments') }}" class="btn btn-outline">
+        <i class="fa fa-calendar-days"></i> Appointments
+      </a>
+    </div>
   </div>
 
-<table border="1" style="margin:auto; border-collapse: collapse; width:80%;">
-    <tr style="background:#eee; text-align:center;">
-        <th>ID</th>
-        <th>Patient</th>
-        <th>Amount</th>
-        <th>Date</th>
-    </tr>
-    {% for pay in payments %}
-    <tr style="text-align:center;">
-        <td>{{ pay[0] }}</td>   {# payment id #}
-        <td>{{ pay[1] }}</td>   {# patient name #}
-        <td>₹{{ pay[2] }}</td>  {# amount #}
-        <td>{{ pay[3] }}</td>   {# created_at #}
-    </tr>
-    {% endfor %}
-</table>
+  <!-- Financial Ledger Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-receipt" style="color: #d97706;"></i> All Invoices & Transactions ({{ payments|length }})
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        <i class="fa fa-shield-check text-emerald-500"></i> Cashless Reconciliation
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Patient Name</th>
+            <th>Billed Amount</th>
+            <th>Method</th>
+            <th>Transaction Date & Time</th>
+            <th>Status</th>
+            <th style="text-align: right;">Invoice</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pay in payments %}
+          {% set pay_id = pay['id'] if pay['id'] is defined else pay[0] %}
+          {% set pt_name = pay['name'] if pay['name'] is defined else pay[1] %}
+          {% set pay_amt = pay['amount'] if pay['amount'] is defined else pay[2] %}
+          {% set pay_date = pay['created_at'] if pay['created_at'] is defined else pay[3] %}
+          {% set pay_method = pay['method'] if pay['method'] is defined else pay[4] %}
+          {% set txn_id = pay['transaction_id'] if pay['transaction_id'] is defined else pay[5] %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: #d97706;">#TXN-{{ pay_id }}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #fef3c7; color: #b45309; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem;">
+                  {{ pt_name[:2] }}
+                </div>
+                <div style="font-weight: 700; color: var(--text-main);">{{ pt_name }}</div>
+              </div>
+            </td>
+            <td>
+              <span style="font-size: 1.05rem; font-weight: 800; color: #059669;">₹{{ pay_amt }}</span>
+            </td>
+            <td>
+              <span class="badge badge-info" style="font-size: 0.75rem;">
+                <i class="fa fa-wallet"></i> {{ pay_method if pay_method else 'Online' }}
+              </span>
+            </td>
+            <td>
+              <span style="color: var(--text-muted); font-size: 0.8125rem;">
+                <i class="fa fa-clock" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ pay_date }}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-success">
+                <i class="fa fa-circle-check"></i> Paid
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <a href="{{ url_for('print_invoice', payment_id=pay_id) }}" target="_blank" class="btn btn-outline btn-sm">
+                <i class="fa fa-print"></i> Invoice
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-money-bill-transfer" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              No payment transactions recorded yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

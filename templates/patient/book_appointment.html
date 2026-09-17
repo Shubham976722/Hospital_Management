@@ -1,16 +1,100 @@
-
 {% extends 'layout.html' %}
+
+{% block title %}Book Doctor Appointment | MedCare+ Patient{% endblock %}
+
 {% block content %}
-<h2>Book Appointment</h2>
-<form method="POST">
-    <label>Select Doctor</label>
-    <select name="doctor_id" required>
-        {% for doc in doctors %}
-        <option value="{{ doc.id }}">{{ doc.name }} ({{ doc.specialization }})</option>
-        {% endfor %}
-    </select>
-    <input type="date" name="date" required>
-    <input type="time" name="time" required>
-    <button type="submit">Book</button>
-</form>
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 950px;">
+    
+    <!-- Left Sidebar -->
+    <div class="auth-sidebar" style="background: linear-gradient(135deg, #064e3b 0%, #0c4a6e 100%);">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem;">
+            <i class="fa fa-calendar-plus"></i>
+          </div>
+          <span>Appointment Booking</span>
+        </div>
+        <h2 class="auth-sidebar-title">Smart OPD Scheduling System</h2>
+        <p class="auth-sidebar-text">
+          Select your preferred doctor and clinical department, choose a convenient date and timeslot, and confirm your OPD consultation with intelligent double-booking prevention.
+        </p>
+
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check"></i> Real-time slot conflict prevention</li>
+          <li><i class="fa fa-circle-check"></i> Past-date restriction & validation</li>
+          <li><i class="fa fa-circle-check"></i> Instant digital confirmation token</li>
+          <li><i class="fa fa-circle-check"></i> Zero hospital waiting queue</li>
+        </ul>
+      </div>
+
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-hospital"></i> Priority Clinical OPD Consultation Desk
+      </div>
+    </div>
+
+    <!-- Right Booking Form -->
+    <div class="auth-main">
+      <div class="auth-header" style="margin-bottom: 1.5rem;">
+        <h1 class="auth-title">Book an Appointment</h1>
+        <p class="auth-subtitle">Select the consulting specialist, date, and preferred time slot.</p>
+      </div>
+
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="doctor_id">Select Consulting Doctor & Specialization</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-user-doctor input-icon"></i>
+            <select id="doctor_id" name="doctor_id" class="form-control" required style="padding-left: 2.75rem;">
+              <option value="">-- Choose Specialist --</option>
+              {% for doc in doctors %}
+                {% set did = doc['id'] if doc['id'] is defined else doc[0] %}
+                {% set dname = doc['name'] if doc['name'] is defined else doc[1] %}
+                {% set dspec = doc['specialization'] if doc['specialization'] is defined else doc[2] %}
+                <option value="{{ did }}">
+                  Dr. {{ dname }} ({{ dspec }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="date">Appointment Date</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-calendar input-icon"></i>
+              <input type="date" id="date" name="date" class="form-control" min="{{ today }}" required>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              <i class="fa fa-circle-info text-sky-500"></i> Earliest date available: Today ({{ today }})
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="time">Preferred Time Slot</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-clock input-icon"></i>
+              <input type="time" id="time" name="time" class="form-control" required>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
+              <i class="fa fa-circle-info text-sky-500"></i> Clinic hours: 09:00 AM - 08:00 PM
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <i class="fa fa-calendar-check"></i> Confirm & Book Appointment
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <a href="{{ url_for('patient_dashboard') }}" style="font-size: 0.8125rem; color: var(--text-muted);">
+          <i class="fa fa-arrow-left"></i> Return to Patient Portal
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

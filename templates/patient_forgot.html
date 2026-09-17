@@ -1,27 +1,64 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
+
+{% block title %}Reset Password | MedCare+ Hospital{% endblock %}
+
 {% block content %}
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 550px; grid-template-columns: 1fr;">
+    <div class="auth-main" style="padding: 2.5rem;">
+      <div class="auth-header" style="text-align: center; margin-bottom: 1.5rem;">
+        <div class="brand-icon" style="margin: 0 auto 1rem; width: 44px; height: 44px; font-size: 1.25rem;">
+          <i class="fa fa-key"></i>
+        </div>
+        <h1 class="auth-title">Reset Patient Password</h1>
+        <p class="auth-subtitle">Verify your identity using your full name and registered Date of Birth.</p>
+      </div>
 
-<h2>Reset Patient Password</h2>
+      {% if msg %}
+        <div class="flash-message danger" style="margin-bottom: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa fa-circle-exclamation"></i>
+            <span>{{ msg }}</span>
+          </div>
+        </div>
+      {% endif %}
 
-{% if msg %}
-<p>{{ msg }}</p>
-{% endif %}
+      <form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="name">Registered Patient Name</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-user input-icon"></i>
+            <input type="text" id="name" name="name" class="form-control" placeholder="Enter full name as registered" required>
+          </div>
+        </div>
 
-<form method="POST">
+        <div class="form-group">
+          <label class="form-label" for="dob">Date of Birth</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-calendar input-icon"></i>
+            <input type="date" id="dob" name="dob" class="form-control" required>
+          </div>
+        </div>
 
-  <label>Patient Name</label>
-  <input type="text" name="name" required>
+        <div class="form-group">
+          <label class="form-label" for="password">Enter New Password</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" class="form-control" placeholder="New secure password" required>
+          </div>
+        </div>
 
-  <label>Date of Birth</label>
-  <input type="date" name="dob" required>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <i class="fa fa-shield-check"></i> Reset & Update Password
+        </button>
+      </form>
 
-  <label>New Password</label>
-  <input type="password" name="password" required>
-
-  <button type="submit">Reset Password</button>
-
-</form>
-
-<a href="{{ url_for('patient_login') }}">← Back to Login</a>
-
+      <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">
+          <i class="fa fa-arrow-left"></i> Back to Patient Login
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

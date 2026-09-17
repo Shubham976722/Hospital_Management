@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Consultation History & Appointments | MedCare+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  
+  <!-- Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #38bdf8);">
+        <i class="fa fa-calendar-days"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">My Appointments Timeline</h1>
+        <div class="dashboard-role-badge" style="background: #e0f2fe; color: #0284c7;">
+          <i class="fa fa-clock"></i> Live Consultation Schedule
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Dashboard
+      </a>
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+        <i class="fa fa-calendar-plus"></i> Book New Appt
+      </a>
+    </div>
+  </div>
+
+  <!-- Appointments Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-list-check" style="color: var(--primary);"></i> Consultation History ({{ appointments|length }})
+      </div>
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary btn-sm">
+        <i class="fa fa-plus"></i> Schedule Visit
+      </a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Appt Token</th>
+            <th>Consulting Specialist</th>
+            <th>Department</th>
+            <th>Appointment Date</th>
+            <th>Scheduled Time</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary);">#APT-{{ appt['id'] }}</span>
+            </td>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main);">{{ appt['doctor_name'] }}</div>
+            </td>
+            <td>
+              <span class="badge badge-specialization">
+                <i class="fa fa-stethoscope"></i> {{ appt['specialization'] }}
+              </span>
+            </td>
+            <td>
+              <span style="color: var(--text-main); font-weight: 600;">
+                <i class="fa fa-calendar" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ appt['appointment_date'] }}
+              </span>
+            </td>
+            <td>
+              <span style="font-family: monospace; color: var(--text-muted); font-weight: 600;">
+                <i class="fa fa-clock" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ appt['appointment_time'] }}
+              </span>
+            </td>
+            <td>
+              {% if appt['status']|lower == 'completed' %}
+                <span class="badge badge-success">
+                  <i class="fa fa-circle-check"></i> Completed
+                </span>
+              {% elif appt['status']|lower == 'scheduled' %}
+                <span class="badge badge-scheduled">
+                  <i class="fa fa-clock"></i> Scheduled
+                </span>
+              {% elif appt['status']|lower == 'expired' %}
+                <span class="badge badge-expired">
+                  <i class="fa fa-circle-xmark"></i> Expired
+                </span>
+              {% else %}
+                <span class="badge badge-info">
+                  {{ appt['status'] }}
+                </span>
+              {% endif %}
+            </td>
+            <td style="text-align: right;">
+              <a href="{{ url_for('patient_payment') }}" class="btn btn-outline-primary btn-sm">
+                <i class="fa fa-credit-card"></i> Settle Bill
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-calendar-xmark" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              You haven't booked any consultations yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+

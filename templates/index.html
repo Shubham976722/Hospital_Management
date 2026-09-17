@@ -1,155 +1,584 @@
 {% extends 'layout.html' %}
 
+{% block title %}MedCare+ | Modern Hospital & Digital Healthcare Portal{% endblock %}
+
 {% block content %}
-<!-- Main Login Container -->
-<div class="container homepage">
-    <h2 class="main-heading">Welcome to Hospital Management System</h2>
+<!-- ===================================================================
+     HERO SECTION WITH CALMING SKY BLUE & WHITE GRADIENT
+     =================================================================== -->
+<section class="hero-section">
+  <div class="hero-inner">
+    <div class="reveal-left active">
+      <div class="hero-tag floating-element">
+        <i class="fa fa-award"></i> NABH Certified Multi-Specialty Hospital
+      </div>
+      <h1 class="hero-title">
+        Advanced Healthcare, <br>
+        <span class="highlight">Compassionate Healing.</span>
+      </h1>
+      <p class="hero-desc">
+        Welcome to MedCare+ Hospital. Book OPD appointments in seconds, consult world-class medical specialists, receive verified e-prescriptions, and experience zero-delay healthcare management.
+      </p>
 
-    <div class="login-buttons">
-        <a href="{{ url_for('login_admin') }}" class="btn btn-admin">🛠 Admin Login</a>
-        <a href="{{ url_for('login_doctor') }}" class="btn btn-doctor">🩺 Doctor Login</a>
-        <a href="{{ url_for('login_patient') }}" class="btn btn-patient">👤 Patient Login</a>
-        <a href="{{ url_for('register_patient') }}" class="btn btn-register">📝 New Registration</a>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="{{ url_for('login_patient') }}" class="btn btn-white btn-lg" style="font-weight: 800;">
+          <i class="fa fa-calendar-check" style="color: var(--primary);"></i> Book Consultation
+        </a>
+        <a href="#departments" class="btn btn-outline btn-lg" style="color: #ffffff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1);">
+          <i class="fa fa-stethoscope"></i> Explore Specialties
+        </a>
+      </div>
     </div>
+
+    <!-- Quick Access Role Cards Grid -->
+    <div class="hero-portal-cards reveal-right active">
+      <a href="{{ url_for('login_admin') }}" class="portal-card">
+        <div class="portal-card-icon" style="background: rgba(255, 255, 255, 0.25); color: #ffffff;">
+          <i class="fa fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="portal-card-title">Admin Portal</div>
+          <div class="portal-card-desc">Staff, billing & operational control</div>
+        </div>
+      </a>
+
+      <a href="{{ url_for('login_doctor') }}" class="portal-card">
+        <div class="portal-card-icon" style="background: rgba(255, 255, 255, 0.25); color: #ffffff;">
+          <i class="fa fa-user-doctor"></i>
+        </div>
+        <div>
+          <div class="portal-card-title">Doctor Desk</div>
+          <div class="portal-card-desc">Patient queues & e-prescriptions</div>
+        </div>
+      </a>
+
+      <a href="{{ url_for('login_patient') }}" class="portal-card">
+        <div class="portal-card-icon" style="background: rgba(255, 255, 255, 0.25); color: #ffffff;">
+          <i class="fa fa-bed-pulse"></i>
+        </div>
+        <div>
+          <div class="portal-card-title">Patient Portal</div>
+          <div class="portal-card-desc">Appointments, bills & medical history</div>
+        </div>
+      </a>
+
+      <a href="{{ url_for('register_patient') }}" class="portal-card">
+        <div class="portal-card-icon" style="background: rgba(255, 255, 255, 0.25); color: #ffffff;">
+          <i class="fa fa-user-plus"></i>
+        </div>
+        <div>
+          <div class="portal-card-title">New Patient</div>
+          <div class="portal-card-desc">Instant online registration</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     LIVE HOSPITAL STATUS TICKER
+     =================================================================== -->
+<div class="live-status-ticker reveal">
+  <div class="ticker-box">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span class="ticker-badge">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+        Live Status
+      </span>
+      <span style="font-weight: 700; color: var(--secondary); font-size: 0.875rem;">Hospital OPD Open Today</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+      <div class="ticker-item">
+        <i class="fa fa-user-doctor"></i>
+        <span><strong>14 Specialists</strong> On Duty</span>
+      </div>
+      <div class="ticker-item">
+        <i class="fa fa-bed"></i>
+        <span><strong>24 ICU Beds</strong> Available</span>
+      </div>
+      <div class="ticker-item">
+        <i class="fa fa-bolt" style="color: #f59e0b;"></i>
+        <span>Emergency Response: <strong>&lt; 5 Mins</strong></span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- START: Inventory Section OUTSIDE main container -->
-<div class="info-wrapper">
-    <section class="info-section light-bg">
-        <div class="info-text">
-            <h2>Inventory Management</h2>
-            <p>Gain control over hospital resources with centralized inventory tracking.</p>
-            <p>From procurement to consumption, manage stock levels, supplier relationships, and interdepartmental
-                requisitions seamlessly.</p>
-        </div>
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/inventory.png') }}" alt="Inventory Management">
-        </div>
-    </section>
+<!-- ===================================================================
+     HOSPITAL METRICS & STATS BANNER
+     =================================================================== -->
+<div class="stats-banner reveal">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-icon">
+        <i class="fa fa-user-md"></i>
+      </div>
+      <div>
+        <div class="stat-value">50+</div>
+        <div class="stat-label">Senior Medical Specialists</div>
+      </div>
+    </div>
 
-    <section class="info-section dark-bg">
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/pharmacy.png') }}" alt="Pharmacy Management">
-        </div>
-        <div class="info-text">
-            <h2>Pharmacy Management</h2>
-            <p>Optimize inventory levels and ensure the availability of critical drugs with integrated pharmacy
-                management software.</p>
-            <p>Track billing, sales, prescriptions, and compliance with real-time stock monitoring and automated reorder
-                points.</p>
-        </div>
-    </section>
+    <div class="stat-item">
+      <div class="stat-icon" style="background: #e0f2fe; color: #0284c7;">
+        <i class="fa fa-hospital-user"></i>
+      </div>
+      <div>
+        <div class="stat-value">10,000+</div>
+        <div class="stat-label">Satisfied Recovered Patients</div>
+      </div>
+    </div>
 
-    <section class="info-section light-bg">
-        <div class="info-text">
-            <h2>Operation Management</h2>
-            <p>Hospital managers are responsible for the daily operations of the hospital, including workflow
-                optimization, resource management, and technology implementation. </p>
-            <p>Example: Streamlining patient registration processes to reduce waiting times, ensuring adequate stock of
-                medical supplies and equipment.</p>
-        </div>
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/operations.webp') }}" alt="Operation Management">
-        </div>
-    </section>
+    <div class="stat-item">
+      <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+        <i class="fa fa-truck-medical"></i>
+      </div>
+      <div>
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Trauma & Cardiac Emergency</div>
+      </div>
+    </div>
 
-    <section class="info-section dark-bg">
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/lab.jpg') }}" alt="Laboratory Information Management System">
-        </div>
-        <div class="info-text">
-            <h2>Laboratory Information Management System</h2>
-            <p>Transforming complicated lab operation into intuitive workflows. With Healthary's LIMS Solution, it is easy
-                to boost the performance, revenue, and lab efficiency.</p>
-            <p>Seamlessly amalgamate with lab instructions and track information anywhere.</p>
-        </div>
-    </section>
-
-    <!-- START: Services Section -->
-    <section class="services-section">
-        <h2 class="services-title">MEDPLUS HELP YOU WITH <span class="highlight">NEUROLOGICAL</span> PROBLEMS.</h2>
-        <div class="services-grid">
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/brain.jpg') }}" alt="Neurological">
-                <h4>NEUROLOGICAL</h4>
-                <p>Focuses on diagnosing and treating disorders of nervous system including Brain and Spinal cord.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/heart.jpg') }}" alt="Cardiological">
-                <h4>CARDIOLOGICAL</h4>
-                <p>Encompasses the diagnosis, treatment, and prevention of Heart and Blood vessels.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/pharmacy1.jpg') }}" alt="Pharmacy">
-                <h4>PHARMACY</h4>
-                <p>A specialized department within a hospital responsible for managing medications.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/transport.jpg') }}" alt="Transport">
-                <h4>Surgical TRANSPORT</h4>
-                <p>Safe and efficient movement of patients, often critically ill.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/xray.jpg') }}" alt="X-ray">
-                <h4>X-RAY</h4>
-                <p>Painless test that captures images of structures inside the body, particularly bones.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/plaster.jpg') }}" alt="Plaster">
-                <h4>PLASTER</h4>
-                <p>Used to create casts and splints for immobilizing and supporting injured limbs.</p>
-            </div>
-            <div class="service-box">
-                <img src="{{ url_for('static', filename='images/tooth.jpg') }}" alt="Dietetics">
-                <h4>Dietetics</h4>
-                <p>Healthcare profession specialized in the science of nutrition.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- OUR MEDICS SECTION -->
-    <section class="medics-section">
-        <h2 class="medics-heading">OUR MEDICS <span class="highlight">GENERALIST</span></h2>
-        <img src="{{ url_for('static', filename='images/medics.jpg') }}" alt="Our Medics" class="medics-img">
-    </section>
-
-    <!-- Footer Section -->
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-column about">
-                <h2 class="footer-logo">Med<span class="plus">+</span></h2>
-                <p>Quisque non ullamcorper mauris. Sed vel pharetra nulla. Sed consectetur interdum lacinia. Mauris
-                    varius molestie dolor.</p>
-            </div>
-            <div class="footer-column services">
-                <h3>Our Services</h3>
-                <ul>
-                    <li>> Cardiology Service</li>
-                    <li>> X-Ray Service</li>
-                    <li>> Chirurgical Service</li>
-                    <li>> Neurological Service</li>
-                    <li>> Pharmacy Service</li>
-                    <li>> Pulmonary Service</li>
-                </ul>
-            </div>
-            <div class="footer-column blog">
-                <h3>From The Blog</h3>
-                <ul>
-                    <li>> Nursing Services Across The City</li>
-                    <li>> Emerging in Graves Disease</li>
-                    <li>> Tips for a Healthy, Safer Picnic</li>
-                    <li>> Having a Baby? 7 Questions</li>
-                    <li>> 4 Signs of Dehydration</li>
-                    <li>> Is There a Place for Medicine?</li>
-                </ul>
-            </div>
-        </div>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/its_sbm_1010/"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.linkedin.com/in/shubham-mhaske-753a53269/"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://www.facebook.com/shubham.mhaske.334491"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://x.com/Shubham97033057"><i class="fab fa-twitter"></i></a>
-        </div>
-    </footer>
+    <div class="stat-item">
+      <div class="stat-icon" style="background: #fee2e2; color: #e11d48;">
+        <i class="fa fa-heart-circle-check"></i>
+      </div>
+      <div>
+        <div class="stat-value">99.4%</div>
+        <div class="stat-label">Clinical Treatment Success</div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- ===================================================================
+     INTERACTIVE DEPARTMENT SEARCH & FILTER BAR
+     =================================================================== -->
+<section class="section-wrapper" id="departments">
+  <div class="section-header reveal">
+    <span class="section-subtitle">Clinical Excellence</span>
+    <h2 class="section-title">Specialized Medical Departments</h2>
+    <p class="section-desc">Search and filter our multi-disciplinary departments to consult with dedicated specialists.</p>
+  </div>
+
+  <!-- Interactive Search & Filter Controls -->
+  <div class="search-filter-box reveal">
+    <div class="input-icon-wrapper">
+      <i class="fa fa-magnifying-glass input-icon"></i>
+      <input type="text" id="deptSearchInput" class="form-control" placeholder="Search department, illness, or medical specialty..." onkeyup="filterDepartments()">
+    </div>
+
+    <div class="filter-pills">
+      <button class="filter-pill active" onclick="filterCategory('all', this)">All Specialties</button>
+      <button class="filter-pill" onclick="filterCategory('cardiology', this)"><i class="fa fa-heart-pulse"></i> Cardiology</button>
+      <button class="filter-pill" onclick="filterCategory('neurology', this)"><i class="fa fa-brain"></i> Neurology</button>
+      <button class="filter-pill" onclick="filterCategory('pediatrics', this)"><i class="fa fa-baby"></i> Pediatrics</button>
+      <button class="filter-pill" onclick="filterCategory('orthopedics', this)"><i class="fa fa-bone"></i> Orthopedics</button>
+      <button class="filter-pill" onclick="filterCategory('radiology', this)"><i class="fa fa-x-ray"></i> Radiology</button>
+      <button class="filter-pill" onclick="filterCategory('pharmacy', this)"><i class="fa fa-prescription-bottle-medical"></i> Pharmacy</button>
+    </div>
+  </div>
+
+  <!-- Specialty Cards Grid -->
+  <div class="cards-grid" id="departmentsGrid">
+    <div class="feature-card reveal delay-1" data-category="neurology">
+      <div class="feature-card-icon" style="background: #e0f2fe; color: #0284c7;">
+        <i class="fa fa-brain"></i>
+      </div>
+      <h3 class="feature-card-title">Neurology & Brain Center</h3>
+      <p class="feature-card-text">Specialized diagnosis and treatment of brain, spinal cord, and peripheral nerve disorders with advanced neuro-diagnostic tools.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" class="btn btn-outline-primary btn-sm btn-block">Book Neurologist</a>
+      </div>
+    </div>
+
+    <div class="feature-card reveal delay-2" data-category="cardiology">
+      <div class="feature-card-icon" style="background: #fee2e2; color: #e11d48;">
+        <i class="fa fa-heart-pulse"></i>
+      </div>
+      <h3 class="feature-card-title">Cardiology & Heart Care</h3>
+      <p class="feature-card-text">24/7 cardiac ICU, ECG, echocardiography, hypertension management, and preventative heart wellness programs.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" class="btn btn-outline-primary btn-sm btn-block">Book Cardiologist</a>
+      </div>
+    </div>
+
+    <div class="feature-card reveal delay-3" data-category="pediatrics">
+      <div class="feature-card-icon" style="background: #fef3c7; color: #d97706;">
+        <i class="fa fa-baby"></i>
+      </div>
+      <h3 class="feature-card-title">Pediatrics & Child Health</h3>
+      <p class="feature-card-text">Compassionate healthcare for infants, children, and adolescents, including vaccination drives and pediatric emergency care.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" class="btn btn-outline-primary btn-sm btn-block">Book Pediatrician</a>
+      </div>
+    </div>
+
+    <div class="feature-card reveal delay-1" data-category="pharmacy">
+      <div class="feature-card-icon" style="background: #ecfdf5; color: #059669;">
+        <i class="fa fa-prescription-bottle-medical"></i>
+      </div>
+      <h3 class="feature-card-title">Smart Digital Pharmacy</h3>
+      <p class="feature-card-text">Directly synchronized with doctor electronic prescriptions for automated drug dispensing and zero medication errors.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <span class="badge badge-success"><i class="fa fa-clock"></i> Open 24 Hours</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal delay-2" data-category="radiology">
+      <div class="feature-card-icon" style="background: #f3e8ff; color: #7e22ce;">
+        <i class="fa fa-x-ray"></i>
+      </div>
+      <h3 class="feature-card-title">Digital Radiology & Imaging</h3>
+      <p class="feature-card-text">High-resolution digital X-rays, 3D ultrasonography, CT scans, and painless diagnostic precision with immediate reporting.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <span class="badge badge-info"><i class="fa fa-circle-check"></i> Digital Reports</span>
+      </div>
+    </div>
+
+    <div class="feature-card reveal delay-3" data-category="orthopedics">
+      <div class="feature-card-icon" style="background: #f0f9ff; color: #0284c7;">
+        <i class="fa fa-bone"></i>
+      </div>
+      <h3 class="feature-card-title">Orthopedics & Joint Care</h3>
+      <p class="feature-card-text">Treatment for bone fractures, arthritis, joint replacements, sports injuries, and supportive plaster cast applications.</p>
+      <div style="margin-top: auto; padding-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" class="btn btn-outline-primary btn-sm btn-block">Book Orthopedic</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     FEATURED ON-DUTY DOCTORS SPOTLIGHT
+     =================================================================== -->
+<section class="section-wrapper" id="doctors" style="background: var(--bg-subtle); padding: 4rem 1.5rem; border-radius: var(--radius-xl);">
+  <div class="section-header reveal">
+    <span class="section-subtitle">Practitioner Directory</span>
+    <h2 class="section-title">Meet Our Senior Specialists</h2>
+    <p class="section-desc">Consult with experienced clinicians renowned for clinical accuracy and compassionate care.</p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Doctor Card 1 -->
+    <div class="feature-card reveal delay-1" style="text-align: center; align-items: center;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; margin-bottom: 1rem; box-shadow: var(--shadow-md);">
+        AM
+      </div>
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.25rem;">Dr. Asha Mehta</h3>
+      <span class="badge badge-specialization" style="margin-bottom: 0.5rem;"><i class="fa fa-heart-pulse"></i> Cardiologist</span>
+      <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1rem;">10+ Years Experience • MD (Cardiology)</p>
+      <div style="display: flex; gap: 0.25rem; color: #f59e0b; font-size: 0.85rem; margin-bottom: 1.25rem;">
+        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+        <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.35rem;">(4.9/5)</span>
+      </div>
+      <a href="{{ url_for('login_patient') }}" class="btn btn-primary btn-sm btn-block">
+        <i class="fa fa-calendar-plus"></i> Book Consultation
+      </a>
+    </div>
+
+    <!-- Doctor Card 2 -->
+    <div class="feature-card reveal delay-2" style="text-align: center; align-items: center;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #0d9488, #2dd4bf); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; margin-bottom: 1rem; box-shadow: var(--shadow-md);">
+        RD
+      </div>
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.25rem;">Dr. Rohan Deshmukh</h3>
+      <span class="badge badge-specialization" style="margin-bottom: 0.5rem;"><i class="fa fa-brain"></i> Neurologist</span>
+      <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1rem;">8+ Years Experience • DM (Neurology)</p>
+      <div style="display: flex; gap: 0.25rem; color: #f59e0b; font-size: 0.85rem; margin-bottom: 1.25rem;">
+        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-stroke"></i>
+        <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.35rem;">(4.8/5)</span>
+      </div>
+      <a href="{{ url_for('login_patient') }}" class="btn btn-primary btn-sm btn-block">
+        <i class="fa fa-calendar-plus"></i> Book Consultation
+      </a>
+    </div>
+
+    <!-- Doctor Card 3 -->
+    <div class="feature-card reveal delay-3" style="text-align: center; align-items: center;">
+      <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; margin-bottom: 1rem; box-shadow: var(--shadow-md);">
+        PS
+      </div>
+      <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.25rem;">Dr. Priya Sharma</h3>
+      <span class="badge badge-specialization" style="margin-bottom: 0.5rem;"><i class="fa fa-baby"></i> Pediatrician</span>
+      <p style="font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 1rem;">5+ Years Experience • DNB (Pediatrics)</p>
+      <div style="display: flex; gap: 0.25rem; color: #f59e0b; font-size: 0.85rem; margin-bottom: 1.25rem;">
+        <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+        <span style="color: var(--text-muted); font-size: 0.75rem; margin-left: 0.35rem;">(5.0/5)</span>
+      </div>
+      <a href="{{ url_for('login_patient') }}" class="btn btn-primary btn-sm btn-block">
+        <i class="fa fa-calendar-plus"></i> Book Consultation
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     INTEGRATED HOSPITAL OPERATIONS (DETAILED INFO)
+     =================================================================== -->
+<section class="section-wrapper" id="services">
+  <div class="section-header reveal">
+    <span class="section-subtitle">Operational Excellence</span>
+    <h2 class="section-title">Seamless Digital Healthcare Infrastructure</h2>
+    <p class="section-desc">Powered by modern enterprise management modules for zero-delay medical treatment.</p>
+  </div>
+
+  <!-- Feature 1: Inventory Management -->
+  <div class="split-feature reveal-left">
+    <div class="split-feature-content">
+      <span class="section-subtitle">Supply Chain Control</span>
+      <h3>Centralized Inventory Management</h3>
+      <p>Gain absolute control over critical medical resources with centralized stock tracking. From pharmaceutical procurement to ICU supply distribution, eliminate shortages during emergency care.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem; color: var(--text-body);">
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Real-time drug and equipment stock monitoring</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Automated reorder notifications for critical inventory</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Supplier tracking and interdepartmental requisitions</li>
+      </ul>
+    </div>
+    <div>
+      <img src="{{ url_for('static', filename='images/inventory.png') }}" alt="Inventory Management" class="split-feature-img">
+    </div>
+  </div>
+
+  <!-- Feature 2: Operation & Patient Flow -->
+  <div class="split-feature reverse reveal-right">
+    <div class="split-feature-content">
+      <span class="section-subtitle">Workflow Optimization</span>
+      <h3>Streamlined Clinical Operations</h3>
+      <p>Reduce patient waiting times with digitized check-in, real-time doctor availability dashboards, and synchronized electronic medical records.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem; color: var(--text-body);">
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Rapid OPD registration and digital token generation</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Automatic status sync between doctors and reception</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Instant UPI, Card, and Cash transaction ledgers</li>
+      </ul>
+    </div>
+    <div>
+      <img src="{{ url_for('static', filename='images/operations.webp') }}" alt="Operation Management" class="split-feature-img">
+    </div>
+  </div>
+
+  <!-- Feature 3: LIMS & Pathology -->
+  <div class="split-feature reveal-left">
+    <div class="split-feature-content">
+      <span class="section-subtitle">Diagnostic Accuracy</span>
+      <h3>Laboratory Information Management (LIMS)</h3>
+      <p>Transforming complex diagnostic pathology into intuitive workflows. Direct digital integration between doctor prescription requests and lab testing counters.</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem; color: var(--text-body);">
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Automated test dispatch directly from doctor's desk</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Secure electronic lab report storage</li>
+        <li><i class="fa fa-circle-check" style="color: var(--primary);"></i> Quick patient access to diagnostic summaries</li>
+      </ul>
+    </div>
+    <div>
+      <img src="{{ url_for('static', filename='images/lab.jpg') }}" alt="Laboratory Information Management" class="split-feature-img">
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     CASHLESS HEALTH INSURANCE PARTNERS
+     =================================================================== -->
+<section class="section-wrapper reveal">
+  <div class="section-header" style="margin-bottom: 2rem;">
+    <span class="section-subtitle">Cashless Treatment</span>
+    <h2 class="section-title">Accepted Health Insurance Partners</h2>
+    <p class="section-desc">We offer hassle-free cashless hospitalization across major government & private insurance providers.</p>
+  </div>
+
+  <div class="insurance-badges-grid">
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> Star Health</div>
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> HDFC ERGO</div>
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> Care Insurance</div>
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> ICICI Lombard</div>
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> Niva Bupa</div>
+    <div class="insurance-badge"><i class="fa fa-shield-heart" style="color: #0284c7;"></i> Bajaj Allianz</div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     VERIFIED PATIENT REVIEWS & TESTIMONIALS
+     =================================================================== -->
+<section class="section-wrapper reveal">
+  <div class="section-header">
+    <span class="section-subtitle">Patient Feedback</span>
+    <h2 class="section-title">What Our Patients Say</h2>
+    <p class="section-desc">Real stories of compassionate care, accurate diagnoses, and swift recovery.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="testimonial-card">
+      <div>
+        <div class="star-rating">
+          <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+        </div>
+        <p class="testimonial-text">
+          "Booking an appointment with Dr. Asha Mehta was seamless. The online prescription system saved me so much time at the pharmacy counter. Outstanding hospital service!"
+        </p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar">RV</div>
+        <div>
+          <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--secondary); margin-bottom: 0;">Rahul Verma</h4>
+          <span style="font-size: 0.75rem; color: #10b981; font-weight: 600;"><i class="fa fa-circle-check"></i> Verified Patient</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div>
+        <div class="star-rating">
+          <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+        </div>
+        <p class="testimonial-text">
+          "The digital patient card with blood group and QR code made check-in instant. The doctors and nursing staff were extremely gentle and caring."
+        </p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: #e0f2fe; color: #0284c7;">SK</div>
+        <div>
+          <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--secondary); margin-bottom: 0;">Sneha Kulkarni</h4>
+          <span style="font-size: 0.75rem; color: #10b981; font-weight: 600;"><i class="fa fa-circle-check"></i> Verified Patient</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-card">
+      <div>
+        <div class="star-rating">
+          <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+        </div>
+        <p class="testimonial-text">
+          "Quick cashless billing with UPI integration and instant prescription download. The cleanest and most organized hospital management system in Jalna."
+        </p>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-avatar" style="background: #fef3c7; color: #d97706;">AP</div>
+        <div>
+          <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--secondary); margin-bottom: 0;">Amit Patil</h4>
+          <span style="font-size: 0.75rem; color: #10b981; font-weight: 600;"><i class="fa fa-circle-check"></i> Verified Patient</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     FREQUENTLY ASKED QUESTIONS (FAQ ACCORDION)
+     =================================================================== -->
+<section class="section-wrapper reveal" id="faq">
+  <div class="section-header">
+    <span class="section-subtitle">Help Center</span>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-desc">Find quick answers to common queries regarding appointments, billing, and consultations.</p>
+  </div>
+
+  <div class="faq-container">
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>How do I book an appointment with a specialist?</span>
+        <i class="fa fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Simply register or sign in to your Patient Portal, navigate to "Book Appointment", select your doctor and desired time slot, and click Confirm. Your appointment token will be generated instantly.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Are emergency and ICU services available 24/7?</span>
+        <i class="fa fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Yes, our Emergency and Trauma Care Unit is operational 24 hours a day, 7 days a week with on-call emergency physicians, intensive care specialists, and dedicated ambulance response.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>How do I pay my hospital consultation or treatment bills?</span>
+        <i class="fa fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        You can pay online via UPI (Google Pay, PhonePe, Paytm, etc.), Debit/Credit Cards through our secure cashless gateway in the Patient Portal, or at the hospital billing counter.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-question" onclick="toggleFaq(this)">
+        <span>Where can I view my prescriptions and doctor diagnosis?</span>
+        <i class="fa fa-chevron-down"></i>
+      </div>
+      <div class="faq-answer">
+        Once your doctor completes your consultation and issues an electronic prescription, it is permanently saved in your Patient Health Portal records for immediate access.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     EMERGENCY CALL TO ACTION BANNER
+     =================================================================== -->
+<section class="section-wrapper reveal">
+  <div class="feature-card pulse-glow" style="background: var(--bg-gradient-hero); color: #ffffff; text-align: center; padding: 4rem 2rem; border: none;">
+    <span class="hero-tag" style="margin-bottom: 0.75rem; background: rgba(255,255,255,0.2);">24/7 Immediate Response</span>
+    <h2 style="font-size: 2.35rem; font-weight: 800; margin-bottom: 1rem; color: #ffffff;">Need Immediate Medical Care?</h2>
+    <p style="color: #f0f9ff; max-width: 650px; margin: 0 auto 2rem; font-size: 1rem;">
+      Our emergency physicians and trauma response teams are always prepared. Call our direct hotline or visit the emergency department immediately.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="tel:+919876543210" class="btn btn-white btn-lg" style="font-weight: 800;">
+        <i class="fa fa-phone-volume" style="color: #e11d48;"></i> Call +91-9876543210
+      </a>
+      <a href="https://www.google.com/maps/place/Warkad+Hospital/@19.8587013,75.8884777,17z" target="_blank" class="btn btn-outline btn-lg" style="color: #ffffff; border-color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.1);">
+        <i class="fa fa-location-arrow"></i> Get Driving Directions
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================================
+     INTERACTIVE JAVASCRIPT FOR FAQ & DEPARTMENT FILTERING
+     =================================================================== -->
+<script>
+  // FAQ Accordion Toggle
+  function toggleFaq(element) {
+    const parent = element.parentElement;
+    parent.classList.toggle('active');
+  }
+
+  // Interactive Department Category Filter
+  function filterCategory(category, button) {
+    // Update active button pill
+    document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    const cards = document.querySelectorAll('#departmentsGrid .feature-card');
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute('data-category');
+      if (category === 'all' || cardCategory === category) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Interactive Live Search
+  function filterDepartments() {
+    const query = document.getElementById('deptSearchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('#departmentsGrid .feature-card');
+    
+    cards.forEach(card => {
+      const title = card.querySelector('.feature-card-title').innerText.toLowerCase();
+      const text = card.querySelector('.feature-card-text').innerText.toLowerCase();
+      
+      if (title.includes(query) || text.includes(query)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
 {% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Medical Prescriptions | MedCare+ Health Portal{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  
+  <!-- Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #0d9488);">
+        <i class="fa fa-prescription-bottle-medical"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">My Electronic Prescriptions</h1>
+        <div class="dashboard-role-badge" style="background: #e0f2fe; color: #0284c7;">
+          <i class="fa fa-circle-check"></i> Verified Digital Health Records
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Patient Portal
+      </a>
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+        <i class="fa fa-calendar-plus"></i> Book Consultation
+      </a>
+    </div>
+  </div>
+
+  <!-- Prescriptions Grid / Cards -->
+  {% if prescriptions %}
+    <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;">
+      {% for rx in prescriptions %}
+        <div class="feature-card" style="padding: 1.75rem; border-left: 4px solid var(--primary);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+            <div>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary); font-size: 0.8125rem;">
+                #RX-MED-{{ rx['id'] }}
+              </span>
+              <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--secondary); margin-top: 0.2rem;">
+                Issued by {{ rx['doctor_name'] }}
+              </h3>
+              <span class="badge badge-specialization" style="margin-top: 0.25rem;">
+                <i class="fa fa-stethoscope"></i> {{ rx['specialization'] }}
+              </span>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="{{ url_for('print_prescription', prescription_id=rx['id']) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                <i class="fa fa-print"></i> Print Official e-Rx
+              </a>
+            </div>
+          </div>
+
+          <div class="form-row" style="grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 1rem;">
+            <div style="background: var(--bg-subtle); padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">
+                Clinical Diagnosis
+              </span>
+              <p style="font-weight: 700; color: var(--secondary); margin-bottom: 0; font-size: 0.95rem;">
+                <i class="fa fa-notes-medical" style="color: #0284c7; margin-right: 0.35rem;"></i> {{ rx['diagnosis'] }}
+              </p>
+            </div>
+
+            <div style="background: #f0fdf4; padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid #bbf7d0;">
+              <span style="font-size: 0.75rem; color: #166534; font-weight: 700; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">
+                Prescribed Medication & Dosage Regimen
+              </span>
+              <p style="font-family: inherit; white-space: pre-line; color: #14532d; font-size: 0.9rem; margin-bottom: 0; line-height: 1.6;">
+                {{ rx['medicine'] }}
+              </p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); padding-top: 0.5rem;">
+            <span><i class="fa fa-hospital"></i> Verified by MedCare+ Digital Pharmacy</span>
+            <span><i class="fa fa-shield-check" style="color: #10b981;"></i> Valid Medical Document</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="table-card" style="text-align: center; padding: 4rem 2rem;">
+      <i class="fa fa-prescription-bottle" style="font-size: 3rem; color: #cbd5e1; margin-bottom: 1rem; display: block;"></i>
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.5rem;">No Prescriptions Issued Yet</h3>
+      <p style="color: var(--text-muted); max-width: 450px; margin: 0 auto 1.5rem; font-size: 0.9rem;">
+        Once you complete a consultation with your doctor, your verified electronic prescriptions will automatically appear here.
+      </p>
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+        <i class="fa fa-calendar-plus"></i> Book a Doctor Consultation
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+

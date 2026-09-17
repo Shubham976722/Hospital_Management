@@ -1,79 +1,67 @@
 {% extends 'layout.html' %}
 
+{% block title %}Admin Overview | MedCare+ Executive{% endblock %}
+
 {% block content %}
-<!-- Admin Home Container -->
-<div class="container homepage">
-    <h1 class="main-heading">Welcome, Admin</h1>
-    <p class="sub-heading">You have full control over the Hospital Management System.</p>
-
-    <div class="login-buttons">
-        <a href="{{ url_for('manage_doctors') }}" class="btn btn-admin">👨‍⚕️ Manage Doctors</a>
-        <a href="{{ url_for('manage_patients') }}" class="btn btn-doctor">👥 Manage Patients</a>
-        <a href="{{ url_for('view_appointments') }}" class="btn btn-patient">📅 View Appointments</a>
-        <a href="{{ url_for('view_payments') }}" class="btn btn-register">💳 Manage Payments</a>
-        <a href="{{ url_for('logout') }}" class="btn btn-logout">🚪 Logout</a>
+<div class="main-content">
+  
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0f172a, #1e1b4b);">
+        <i class="fa fa-user-shield"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Hospital Administration Command</h1>
+        <div class="dashboard-role-badge">
+          <i class="fa fa-circle-check"></i> Super Admin Mode
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- START: Admin Dashboard Info Sections -->
-<div class="info-wrapper">
-    <section class="info-section light-bg">
-        <div class="info-text">
-            <h2>System Overview</h2>
-            <p>Monitor hospital data in real-time. Analyze appointments, payments, staff data, and patient registrations from this panel.</p>
-        </div>
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/admin.png') }}" alt="Admin Dashboard">
-        </div>
-    </section>
-
-    <section class="info-section dark-bg">
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/reports.png') }}" alt="Reports & Logs">
-        </div>
-        <div class="info-text">
-            <h2>Reports & Logs</h2>
-            <p>Generate operational reports, transaction logs, user logs, and weekly summaries to evaluate efficiency and identify bottlenecks.</p>
-        </div>
-    </section>
-
-    <section class="info-section light-bg">
-        <div class="info-text">
-            <h2>Inventory & Pharmacy</h2>
-            <p>Track inventory consumption, restock alerts, and pharmacy updates. Ensure no medical shortages occur during peak hours.</p>
-        </div>
-        <div class="info-image">
-            <img src="{{ url_for('static', filename='images/inventory.png') }}" alt="Inventory">
-        </div>
-    </section>
-</div>
-
-<!-- Footer Section (same as homepage) -->
-<footer class="site-footer">
-    <div class="footer-container">
-        <div class="footer-column about">
-            <h2 class="footer-logo">Med<span class="plus">+</span> Admin</h2>
-            <p>Admin Dashboard – manage doctors, patients, and overall hospital workflow.</p>
-        </div>
-        <div class="footer-column services">
-            <h3>Quick Links</h3>
-            <ul>
-                <li>> Add New Doctor</li>
-                <li>> Verify Patient Records</li>
-                <li>> Financial Overview</li>
-                <li>> Appointment Logs</li>
-                <li>> Inventory Alerts</li>
-            </ul>
-        </div>
-        <div class="footer-column blog">
-            <h3>System Alerts</h3>
-            <ul>
-                <li>> 3 Doctor Registrations Pending</li>
-                <li>> 2 Appointments Overdue</li>
-                <li>> Low Pharmacy Stock Alert</li>
-                <li>> New Feedback from Patient</li>
-            </ul>
-        </div>
+    <div class="dashboard-actions">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">
+        <i class="fa fa-gauge"></i> Executive Dashboard
+      </a>
+      <a href="{{ url_for('logout_admin') }}" class="btn btn-danger-outline">
+        <i class="fa fa-right-from-bracket"></i> Logout
+      </a>
     </div>
-</footer>
+  </div>
+
+  <!-- Operational Module Launchpad Cards -->
+  <div class="cards-grid" style="margin-bottom: 3rem;">
+    <a href="{{ url_for('admin_dashboard') }}" class="feature-card">
+      <div class="feature-card-icon" style="background: #ecfdf5; color: #059669;">
+        <i class="fa fa-user-doctor"></i>
+      </div>
+      <h3 class="feature-card-title">Doctor Management</h3>
+      <p class="feature-card-text">Add, audit, or remove hospital doctors, specializations, and contact records.</p>
+    </a>
+
+    <a href="{{ url_for('view_patients') }}" class="feature-card">
+      <div class="feature-card-icon" style="background: #e0f2fe; color: #0284c7;">
+        <i class="fa fa-users"></i>
+      </div>
+      <h3 class="feature-card-title">Patient Records</h3>
+      <p class="feature-card-text">View all registered patients, demographic data, blood groups, and medical histories.</p>
+    </a>
+
+    <a href="{{ url_for('view_appointments') }}" class="feature-card">
+      <div class="feature-card-icon" style="background: #f3e8ff; color: #7e22ce;">
+        <i class="fa fa-calendar-days"></i>
+      </div>
+      <h3 class="feature-card-title">Appointment Schedules</h3>
+      <p class="feature-card-text">Real-time inspection of patient bookings, scheduled slots, and expired sessions.</p>
+    </a>
+
+    <a href="{{ url_for('view_payments') }}" class="feature-card">
+      <div class="feature-card-icon" style="background: #fef3c7; color: #d97706;">
+        <i class="fa fa-credit-card"></i>
+      </div>
+      <h3 class="feature-card-title">Financial Ledger</h3>
+      <p class="feature-card-text">Track all hospital payments, UPI transaction IDs, and settlement receipts.</p>
+    </a>
+  </div>
+
+</div>
 {% endblock %}

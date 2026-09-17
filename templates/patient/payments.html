@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% block title %}My Payment Receipts & Ledger | MedCare+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  
+  <!-- Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #d97706, #0284c7);">
+        <i class="fa fa-receipt"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">My Payment History & Invoices</h1>
+        <div class="dashboard-role-badge" style="background: #fef3c7; color: #b45309;">
+          <i class="fa fa-shield-check"></i> Cashless Billing Records
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Dashboard
+      </a>
+      <a href="{{ url_for('patient_payment') }}" class="btn btn-primary">
+        <i class="fa fa-credit-card"></i> Pay Bill
+      </a>
+    </div>
+  </div>
+
+  <!-- Payments Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-file-invoice-dollar" style="color: #d97706;"></i> Verified Invoices & Receipts ({{ payments|length }})
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        <i class="fa fa-print"></i> Printable Hospital Receipts Available
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Receipt ID</th>
+            <th>Linked Appt</th>
+            <th>Amount Paid</th>
+            <th>Payment Mode</th>
+            <th>Transaction ID / UTR</th>
+            <th>Date & Time</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: #d97706;">#REC-{{ p['id'] }}</span>
+            </td>
+            <td>
+              {% if p['appointment_id'] %}
+                <span class="badge badge-info">#APT-{{ p['appointment_id'] }}</span>
+              {% else %}
+                <span style="color: var(--text-muted); font-size: 0.75rem;">General</span>
+              {% endif %}
+            </td>
+            <td>
+              <span style="font-size: 1.05rem; font-weight: 800; color: #059669;">₹{{ p['amount'] }}</span>
+            </td>
+            <td>
+              <span class="badge" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">
+                <i class="fa fa-wallet"></i> {{ p['method'] }}
+              </span>
+            </td>
+            <td>
+              <span style="font-family: monospace; color: var(--text-muted); font-size: 0.8125rem;">
+                {{ p['transaction_id'] if p['transaction_id'] else (p['upi_id'] if p['upi_id'] else 'Cash Verified') }}
+              </span>
+            </td>
+            <td>
+              <span style="color: var(--text-muted); font-size: 0.85rem;">
+                <i class="fa fa-clock" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ p['created_at'] }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <a href="{{ url_for('print_invoice', payment_id=p['id']) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                <i class="fa fa-print"></i> Print Invoice
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-receipt" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              No payment transactions recorded yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+

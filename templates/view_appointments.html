@@ -1,65 +1,116 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
+
+{% block title %}Hospital Appointments Audit | MedCare+ Executive{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>View Appointments</title>
-    <br>
-    <!-- Square Back Button -->
-<div style="text-align: center; margin-bottom: 10px;">
-  <a href="{{ url_for('admin_dashboard') }}" style="display: inline-block;
-      text-decoration: none;
-      border: 2px solid #6c63ff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      background-color: #e6e6ff;
-      color: #6c63ff;
-      font-weight: bold;">
-    ← Back
-  </a>
-</div>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .expired {
-            background-color: #ffdddd;
-        }
-    </style>
-</head>
-<body>
-    <h2>Appointments</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Patient</th>
-            <th>Doctor</th>
-            <th>Date</th>
-            <th>Time</th>
+<div class="main-content">
+  
+  <!-- Dashboard Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #7e22ce, #0f172a);">
+        <i class="fa fa-calendar-check"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Hospital Master Appointments</h1>
+        <div class="dashboard-role-badge" style="background: #f3e8ff; color: #7e22ce;">
+          <i class="fa fa-clock"></i> Live Consultation Timeline
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
+      </a>
+      <a href="{{ url_for('view_patients') }}" class="btn btn-outline">
+        <i class="fa fa-users"></i> Patients
+      </a>
+      <a href="{{ url_for('view_payments') }}" class="btn btn-outline">
+        <i class="fa fa-credit-card"></i> Payments
+      </a>
+    </div>
+  </div>
+
+  <!-- Appointments Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-calendar-days" style="color: #7e22ce;"></i> Master Booking Queue ({{ appointments|length }})
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        <i class="fa fa-arrows-rotate text-emerald-500"></i> Auto-Expiring Real-Time Sync
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Appt ID</th>
+            <th>Patient Name</th>
+            <th>Consulting Doctor</th>
+            <th>Appointment Date</th>
+            <th>Timeslot</th>
             <th>Status</th>
-        </tr>
-        {% for appt in appointments %}
-        <tr class="{{ 'expired' if appt.status == 'Expired' else '' }}">
-            <td>{{ appt.id }}</td>
-            <td>{{ appt.patient_name }}</td>
-            <td>{{ appt.doctor_name }}</td>
-            <td>{{ appt.appointment_date }}</td>
-            <td>{{ appt.appointment_time }}</td>
-            <td>{{ appt.status }}</td>
-          </form>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: #7e22ce;">#APT-{{ appt.id }}</span>
+            </td>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main);">{{ appt.patient_name }}</div>
+            </td>
+            <td>
+              <span class="badge badge-specialization">
+                <i class="fa fa-user-doctor"></i> Dr. {{ appt.doctor_name }}
+              </span>
+            </td>
+            <td>
+              <span style="color: var(--text-main); font-weight: 600;">
+                <i class="fa fa-calendar" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ appt.appointment_date }}
+              </span>
+            </td>
+            <td>
+              <span style="font-family: monospace; color: var(--text-muted); font-weight: 600;">
+                <i class="fa fa-clock" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ appt.appointment_time }}
+              </span>
+            </td>
+            <td>
+              {% if appt.status|lower == 'completed' %}
+                <span class="badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                  <i class="fa fa-circle-check"></i> Completed
+                </span>
+              {% elif appt.status|lower == 'scheduled' %}
+                <span class="badge badge-scheduled">
+                  <i class="fa fa-clock"></i> Scheduled
+                </span>
+              {% elif appt.status|lower == 'expired' %}
+                <span class="badge badge-expired">
+                  <i class="fa fa-circle-xmark"></i> Expired
+                </span>
+              {% else %}
+                <span class="badge badge-info">
+                  <i class="fa fa-circle-info"></i> {{ appt.status }}
+                </span>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-calendar-xmark" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              No appointment bookings registered yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

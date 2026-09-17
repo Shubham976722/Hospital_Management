@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% block title %}Patient Clinical History | {{ patient['name'] }} | MedCare+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  
+  <!-- Top Navigation / Header -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #064e3b);">
+        <i class="fa fa-notes-medical"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Clinical Medical Record</h1>
+        <div class="dashboard-role-badge" style="background: #e0f2fe; color: #0369a1;">
+          <i class="fa fa-folder-open"></i> Patient EHR Chart • #PAT-{{ patient['id'] }}
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('doctor_appointments') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Appointments Queue
+      </a>
+      <a href="{{ url_for('doctor_prescriptions', patient_id=patient['id']) }}" class="btn btn-primary">
+        <i class="fa fa-pen-to-square"></i> Prescribe Medication
+      </a>
+    </div>
+  </div>
+
+  <!-- Patient Summary Card -->
+  <div class="health-id-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);">
+    <div class="health-id-top">
+      <div>
+        <span style="font-size: 0.6875rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #7dd3fc; display: block;">
+          Electronic Health Record (EHR) Profile
+        </span>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 0.25rem; color: #ffffff;">{{ patient['name'] }}</h2>
+      </div>
+      <div class="health-id-badge" style="background: rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.5); color: #fecaca;">
+        <i class="fa fa-droplet"></i> Blood: {{ patient['blood_group'] if patient['blood_group'] else 'O+' }}
+      </div>
+    </div>
+
+    <div class="health-id-grid">
+      <div>
+        <span class="health-id-label">Patient ID</span>
+        <span class="health-id-val" style="font-family: monospace;">#PAT-{{ patient['id'] }}</span>
+      </div>
+      <div>
+        <span class="health-id-label">Age & Gender</span>
+        <span class="health-id-val">{{ patient['age'] }} Yrs / {{ patient['gender'] }}</span>
+      </div>
+      <div>
+        <span class="health-id-label">Date of Birth</span>
+        <span class="health-id-val">{{ patient['dob'] }}</span>
+      </div>
+      <div>
+        <span class="health-id-label">Contact Mobile</span>
+        <span class="health-id-val" style="font-family: monospace;">+91 {{ patient['mobile'] }}</span>
+      </div>
+      <div>
+        <span class="health-id-label">Email Address</span>
+        <span class="health-id-val">{{ patient['email'] }}</span>
+      </div>
+      <div>
+        <span class="health-id-label">Registered Address</span>
+        <span class="health-id-val" style="font-size: 0.8125rem;">{{ patient['address'] if patient['address'] else 'Jalna, Maharashtra' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+    <!-- Left Column: Past Prescriptions -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="fa fa-prescription-bottle-medical" style="color: var(--primary);"></i> Past Prescriptions ({{ prescriptions|length }})
+        </div>
+      </div>
+
+      <div style="padding: 1.25rem;">
+        {% for rx in prescriptions %}
+        <div class="feature-card" style="padding: 1.25rem; margin-bottom: 1rem; border-left: 4px solid var(--primary); background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div>
+              <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: var(--primary);">#RX-{{ rx['id'] }}</span>
+              <h4 style="font-size: 1rem; font-weight: 800; color: var(--secondary); margin: 0.15rem 0;">{{ rx['diagnosis'] }}</h4>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">
+                <i class="fa fa-user-doctor"></i> Dr. {{ rx['doctor_name'] }} ({{ rx['specialization'] }})
+              </span>
+            </div>
+            <a href="{{ url_for('print_prescription', prescription_id=rx['id']) }}" target="_blank" class="btn btn-outline btn-sm" title="Print e-Rx">
+              <i class="fa fa-print"></i>
+            </a>
+          </div>
+
+          <div style="background: var(--surface-subtle); border-radius: 8px; padding: 0.75rem; margin-top: 0.5rem; font-size: 0.8125rem;">
+            <div style="font-weight: 700; color: var(--secondary); margin-bottom: 0.25rem; font-size: 0.75rem; text-transform: uppercase;">Prescribed Medication:</div>
+            <p style="white-space: pre-line; margin-bottom: 0; color: var(--text-main); font-family: inherit;">{{ rx['medicine'] }}</p>
+          </div>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+          <i class="fa fa-prescription-bottle" style="font-size: 2rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem;"></i>
+          No previous prescriptions recorded for this patient.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right Column: Past Appointments & Consultations -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="fa fa-calendar-check" style="color: #059669;"></i> Consultation Visits ({{ appointments|length }})
+        </div>
+      </div>
+
+      <div style="padding: 1.25rem;">
+        {% for appt in appointments %}
+        <div class="feature-card" style="padding: 1.25rem; margin-bottom: 1rem; border-left: 4px solid {% if appt['status']|lower == 'completed' %}#10b981{% elif appt['status']|lower == 'scheduled' %}#0284c7{% else %}#94a3b8{% endif %}; background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">#APT-{{ appt['id'] }}</span>
+              <div style="font-weight: 700; color: var(--secondary); margin-top: 0.15rem;">
+                <i class="fa fa-calendar-day" style="color: var(--primary);"></i> {{ appt['appointment_date'] }} at {{ appt['appointment_time'] }}
+              </div>
+              <div style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.25rem;">
+                <i class="fa fa-user-doctor"></i> Dr. {{ appt['doctor_name'] }} ({{ appt['specialization'] }})
+              </div>
+            </div>
+
+            <div>
+              {% if appt['status']|lower == 'completed' %}
+                <span class="badge" style="background: #ecfdf5; color: #059669;"><i class="fa fa-circle-check"></i> Completed</span>
+              {% elif appt['status']|lower == 'scheduled' %}
+                <span class="badge badge-scheduled"><i class="fa fa-clock"></i> Scheduled</span>
+              {% else %}
+                <span class="badge badge-expired"><i class="fa fa-circle-xmark"></i> {{ appt['status'] }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+          <i class="fa fa-calendar-xmark" style="font-size: 2rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem;"></i>
+          No consultation visits on record for this patient.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+

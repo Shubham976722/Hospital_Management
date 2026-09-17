@@ -1,36 +1,196 @@
 {% extends "layout.html" %}
 
+{% block title %}Doctor Dashboard | MedCare+ Clinician Desk{% endblock %}
+
 {% block content %}
-  <h2 class="text-center text-2xl font-bold mb-4">
-    Welcome {{ doctor['name'] }}
-  </h2>
+<div class="main-content">
+  
+  <!-- Doctor Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #064e3b);">
+        <i class="fa fa-user-doctor"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Welcome, {% if doctor['name'].startswith('Dr.') or doctor['name'].startswith('Dr ') %}{{ doctor['name'] }}{% else %}Dr. {{ doctor['name'] }}{% endif %}</h1>
+        <div class="dashboard-role-badge" style="background: #e0f2fe; color: #0369a1;">
+          <i class="fa fa-stethoscope"></i> {{ doctor['specialization'] }} • On-Duty OPD
+        </div>
+      </div>
+    </div>
 
-  <div class="text-center mb-4">
-    <a href="{{ url_for('doctor_appointments') }}" class="btn btn-success mx-2">
-      <i class="fa fa-calendar"></i> View Appointments
-    </a>
-    <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-success mx-2">
-      <i class="fa fa-prescription-bottle-alt"></i> Write Prescription
-    </a>
-    <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-success mx-2">
-      <i class="fa fa-user-edit"></i> Update Profile
-    </a>
-    <a href="{{ url_for('logout_doctor') }}" class="btn btn-success mx-2">
-      <i class="fa fa-sign-out-alt"></i> Logout
-      <br>
-    </a>
+    <!-- Doctor Action Buttons -->
+    <div class="dashboard-actions">
+      <a href="{{ url_for('doctor_appointments') }}" class="btn btn-primary">
+        <i class="fa fa-calendar-check"></i> Patient Queue
+      </a>
+      <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-outline-primary">
+        <i class="fa fa-prescription"></i> Write Prescription
+      </a>
+      <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-outline">
+        <i class="fa fa-user-pen"></i> Edit Profile
+      </a>
+      <a href="{{ url_for('logout_doctor') }}" class="btn btn-danger-outline">
+        <i class="fa fa-right-from-bracket"></i> Logout
+      </a>
+    </div>
   </div>
 
-  <div class="card p-4 shadow mb-4">
-    <h3 class="text-xl font-semibold mb-3">Your Profile</h3>
+  <!-- Metric Overview Cards -->
+  <div class="metrics-row" style="margin-bottom: 2rem;">
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Today's Active Queue</span>
+        <div class="metric-icon" style="background: #e0f2fe; color: #0284c7;">
+          <i class="fa fa-calendar-day"></i>
+        </div>
+      </div>
+      <div class="metric-value">{{ today_count }}</div>
+      <div class="metric-footer" style="color: #0284c7;">
+        <i class="fa fa-clock"></i> Scheduled for today
+      </div>
+    </div>
 
-    <p><strong>Name:</strong> {{ doctor['name'] }}</p>
-    <p><strong>Email:</strong> {{ doctor['email'] }}</p>
-    <p><strong>Specialization:</strong> {{ doctor['specialization'] }}</p>
-    <p><strong>Phone:</strong> {{ doctor['phone'] }}</p>
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Quick Consultation Action</span>
+        <div class="metric-icon" style="background: #ecfdf5; color: #059669;">
+          <i class="fa fa-prescription-bottle-medical"></i>
+        </div>
+      </div>
+      <div class="metric-value" style="font-size: 1.25rem;">
+        <a href="{{ url_for('doctor_prescriptions') }}" style="color: #059669; font-weight: 800; text-decoration: none;">New e-Rx Pad →</a>
+      </div>
+      <div class="metric-footer">
+        <span style="color: var(--text-muted);">Issue instant diagnosis & medicines</span>
+      </div>
+    </div>
 
-    <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-primary mt-3">
-      Edit Profile
-    </a>
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Clinical Specialization</span>
+        <div class="metric-icon" style="background: #f3e8ff; color: #7e22ce;">
+          <i class="fa fa-award"></i>
+        </div>
+      </div>
+      <div class="metric-value" style="font-size: 1.15rem; color: #7e22ce;">{{ doctor['specialization'] }}</div>
+      <div class="metric-footer">
+        <span style="color: var(--text-muted);">{{ doctor['experience'] }} Yrs Clinical Exp</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Recent Patient Queue Table -->
+  <div class="table-card" style="margin-bottom: 2rem;">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-clock" style="color: var(--primary);"></i> Recent Patient Consultation Queue
+      </div>
+      <a href="{{ url_for('doctor_appointments') }}" class="btn btn-outline-primary btn-sm">
+        View Full Schedule ({{ today_count }} Pending) →
+      </a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Appt ID</th>
+            <th>Patient</th>
+            <th>Consultation Date</th>
+            <th>Time Slot</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in recent_appts %}
+          <tr>
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary);">#APT-{{ appt['id'] }}</span>
+            </td>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main);">{{ appt['patient_name'] }}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">{{ appt['age'] }}Y • {{ appt['gender'] }}</div>
+            </td>
+            <td>
+              <span style="font-weight: 600; color: var(--text-main);">{{ appt['appointment_date'] }}</span>
+            </td>
+            <td>
+              <span style="font-family: monospace; font-weight: 600; color: var(--text-muted);">{{ appt['appointment_time'] }}</span>
+            </td>
+            <td>
+              {% if appt['status']|lower == 'completed' %}
+                <span class="badge" style="background: #ecfdf5; color: #059669;"><i class="fa fa-circle-check"></i> Completed</span>
+              {% elif appt['status']|lower == 'scheduled' %}
+                <span class="badge badge-scheduled"><i class="fa fa-clock"></i> Scheduled</span>
+              {% else %}
+                <span class="badge badge-expired">{{ appt['status'] }}</span>
+              {% endif %}
+            </td>
+            <td style="text-align: right;">
+              <div style="display: inline-flex; gap: 0.4rem;">
+                <a href="{{ url_for('doctor_prescriptions', patient_id=appt['patient_id'], appointment_id=appt['id']) }}" class="btn btn-primary btn-sm" title="Prescribe">
+                  <i class="fa fa-prescription"></i> Prescribe
+                </a>
+                <a href="{{ url_for('doctor_patient_history', patient_id=appt['patient_id']) }}" class="btn btn-outline btn-sm" title="Clinical History">
+                  <i class="fa fa-folder-open"></i> History
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+              No active appointments found in your queue today.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Doctor Profile Overview Card -->
+  <div class="feature-card" style="padding: 1.75rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.85rem; margin-bottom: 1.25rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 38px; height: 38px; border-radius: 10px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+          <i class="fa fa-id-card-clip"></i>
+        </div>
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--secondary); margin-bottom: 0.1rem;">Practitioner Clinical Profile</h3>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Verified Hospital Staff Directory</span>
+        </div>
+      </div>
+      <a href="{{ url_for('update_doctor_profile') }}" class="btn btn-outline btn-sm">
+        <i class="fa fa-pen-to-square"></i> Update Info
+      </a>
+    </div>
+
+    <div class="form-row" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Doctor Name</span>
+        <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-main); margin-top: 0.2rem;">{{ doctor['name'] }}</div>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Specialization</span>
+        <div style="margin-top: 0.2rem;">
+          <span class="badge badge-specialization"><i class="fa fa-stethoscope"></i> {{ doctor['specialization'] }}</span>
+        </div>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Official Email</span>
+        <div style="font-weight: 600; color: var(--text-main); margin-top: 0.2rem;">{{ doctor['email'] }}</div>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">Contact Number</span>
+        <div style="font-family: monospace; font-weight: 600; color: var(--text-main); margin-top: 0.2rem;">
+          +91 {{ doctor['mobile'] if doctor['mobile'] else doctor['phone'] if doctor['phone'] else 'Not set' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

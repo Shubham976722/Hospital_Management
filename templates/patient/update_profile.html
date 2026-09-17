@@ -1,14 +1,71 @@
-
 {% extends 'layout.html' %}
+
+{% block title %}Update Patient Profile | MedCare+{% endblock %}
+
 {% block content %}
-<h2>Update Profile</h2>
-<form method="POST">
-    <input type="text" name="name" value="{{ patient.name }}" required>
-    <input type="number" name="age" value="{{ patient.age }}" required>
-    <input type="text" name="gender" value="{{ patient.gender }}" required>
-    <input type="email" name="email" value="{{ patient.email }}" required>
-    <input type="date" name="dob" value="{{ patient.dob }}" required>
-    <input type="text" name="address" value="{{ patient.address }}" required>
-    <button type="submit">Update</button>
-</form>
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 800px; grid-template-columns: 1fr;">
+    <div class="auth-main" style="padding: 2.5rem;">
+      <div class="auth-header" style="text-align: center; margin-bottom: 2rem;">
+        <div class="brand-icon" style="margin: 0 auto 1rem; width: 48px; height: 48px; font-size: 1.35rem;">
+          <i class="fa fa-user-pen"></i>
+        </div>
+        <h1 class="auth-title">Update Patient Profile</h1>
+        <p class="auth-subtitle">Keep your patient demographic information accurate.</p>
+      </div>
+
+      <form method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-user input-icon"></i>
+              <input type="text" id="name" name="name" class="form-control" value="{{ patient.name }}" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-envelope input-icon"></i>
+              <input type="email" id="email" name="email" class="form-control" value="{{ patient.email }}" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="age">Age</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-id-card input-icon"></i>
+              <input type="number" id="age" name="age" class="form-control" value="{{ patient.age }}" min="0" max="120" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="gender">Gender</label>
+            <div class="input-icon-wrapper">
+              <i class="fa fa-venus-mars input-icon"></i>
+              <select id="gender" name="gender" class="form-control" required style="padding-left: 2.75rem;">
+                <option value="Male" {% if patient.gender == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if patient.gender == 'Female' %}selected{% endif %}>Female</option>
+                <option value="Other" {% if patient.gender == 'Other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1.5rem;">
+          <i class="fa fa-floppy-disk"></i> Save Updated Profile
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1rem;">
+        <a href="{{ url_for('patient_dashboard') }}" style="font-size: 0.85rem; color: var(--primary); font-weight: 700;">
+          <i class="fa fa-arrow-left"></i> Back to Patient Portal
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

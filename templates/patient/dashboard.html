@@ -1,32 +1,244 @@
 {% extends "layout.html" %}
 
+{% block title %}Patient Health Portal | MedCare+{% endblock %}
+
 {% block content %}
-<h2 class="text-center text-2xl font-bold mb-4">Welcome Mr. {{ patient.name }}</h2>
-<div class="text-center mb-4">
-    <a href="{{ url_for('update_profile') }}" class="btn btn-success mx-2">
-        <i class="fa fa-user-edit"></i> Update Profile
-    </a>
-    <a href="{{ url_for('book_appointment') }}" class="btn btn-success mx-2">
-        <i class="fa fa-calendar"></i> Book Appointment
-    </a>
-    <a href="{{ url_for('patient_payment') }}" class="btn btn-success mx-2">
-        <i class="fa fa-credit-card"></i> Make Payment
-    </a>
-    <a href="{{ url_for('logout_patient') }}" class="btn btn-success mx-2">
-        <i class="fa fa-sign-out-alt"></i> Logout
-    </a>
-    <br>
-    <br>
-    <p><strong>Email : </strong> {{ patient.email }}</p>
-            <p><strong>Age : </strong> {{ patient.age }}</p>
-            <p><strong>Gender : </strong> {{ patient.gender }}</p>
-            <p><strong>Date of Birth : </strong> {{ patient.dob }}</p>
-            <p><strong>Mobile Number :</strong> {{ patient.mobile }}</p>
-            <p><strong>Blood Group :</strong> {{ patient.blood_group }}</p>
-            <p><strong>Address :</strong> {{ patient.address}}</p>
+<div class="main-content">
+  
+  <!-- Patient Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #059669, #0284c7);">
+        <i class="fa fa-hospital-user"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Welcome, {{ patient.name }}</h1>
+        <div class="dashboard-role-badge" style="background: #ecfdf5; color: #059669;">
+          <i class="fa fa-circle-check"></i> Active Patient Member • ID #PAT-{{ patient.id }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Patient Action Buttons -->
+    <div class="dashboard-actions">
+      <a href="{{ url_for('book_appointment') }}" class="btn btn-primary">
+        <i class="fa fa-calendar-plus"></i> Book Consultation
+      </a>
+      <a href="{{ url_for('patient_prescriptions') }}" class="btn btn-outline-primary">
+        <i class="fa fa-prescription-bottle-medical"></i> My Prescriptions
+      </a>
+      <a href="{{ url_for('patient_appointments') }}" class="btn btn-outline">
+        <i class="fa fa-clock-rotate-left"></i> History
+      </a>
+      <a href="{{ url_for('patient_payments') }}" class="btn btn-outline">
+        <i class="fa fa-receipt"></i> Receipts
+      </a>
+      <a href="{{ url_for('logout_patient') }}" class="btn btn-danger-outline">
+        <i class="fa fa-right-from-bracket"></i> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Top Grid: Digital Health Card & Quick Actions -->
+  <div class="form-row" style="grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; margin-bottom: 2.5rem;">
+    
+    <!-- LEFT: Digital Health ID Card -->
+    <div class="health-id-card">
+      <div class="health-id-top">
+        <div>
+          <span style="font-size: 0.6875rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #6ee7b7; display: block;">
+            MedCare+ Digital Health ID
+          </span>
+          <h2 style="font-size: 1.4rem; font-weight: 800; margin-top: 0.25rem; color: #ffffff;">{{ patient.name }}</h2>
+        </div>
+        <div class="health-id-badge" style="background: rgba(239, 68, 68, 0.3); border-color: rgba(239, 68, 68, 0.5); color: #fecaca;">
+          <i class="fa fa-droplet"></i> {{ patient.blood_group if patient.blood_group else 'O+' }}
+        </div>
+      </div>
+
+      <div class="health-id-grid">
+        <div>
+          <span class="health-id-label">Patient Member ID</span>
+          <span class="health-id-val" style="font-family: monospace;">#PAT-{{ patient.id }}</span>
+        </div>
+        <div>
+          <span class="health-id-label">Age & Gender</span>
+          <span class="health-id-val">{{ patient.age }} Yrs / {{ patient.gender }}</span>
+        </div>
+        <div>
+          <span class="health-id-label">Date of Birth</span>
+          <span class="health-id-val">{{ patient.dob }}</span>
+        </div>
+        <div>
+          <span class="health-id-label">Mobile Number</span>
+          <span class="health-id-val" style="font-family: monospace;">+91 {{ patient.mobile }}</span>
+        </div>
+        <div style="grid-column: span 2;">
+          <span class="health-id-label">Registered Address</span>
+          <span class="health-id-val" style="font-size: 0.75rem;">{{ patient.address if patient.address else 'Jalna, Maharashtra' }}</span>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 0.85rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: #cbd5e1;">
+        <a href="{{ url_for('update_profile') }}" style="color: #6ee7b7; font-weight: 700; text-decoration: none;">
+          <i class="fa fa-user-pen"></i> Edit Profile Info
+        </a>
+        <span><i class="fa fa-qrcode" style="font-size: 1.15rem;"></i> QR Verified</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: 4 Core Feature Service Cards -->
+    <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+        
+        <a href="{{ url_for('book_appointment') }}" class="portal-card" style="background: #e0f2fe; border-color: #bae6fd; text-decoration: none;">
+          <div class="portal-card-icon" style="background: #0284c7; color: #ffffff;">
+            <i class="fa fa-calendar-plus"></i>
+          </div>
+          <div>
+            <div class="portal-card-title" style="color: var(--secondary); font-size: 0.95rem;">Book Consultation</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Schedule OPD slot with doctor</div>
+          </div>
+        </a>
+
+        <a href="{{ url_for('patient_prescriptions') }}" class="portal-card" style="background: #ecfdf5; border-color: #a7f3d0; text-decoration: none;">
+          <div class="portal-card-icon" style="background: #059669; color: #ffffff;">
+            <i class="fa fa-prescription"></i>
+          </div>
+          <div>
+            <div class="portal-card-title" style="color: var(--secondary); font-size: 0.95rem;">My Prescriptions</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">View & print doctor e-Rx</div>
+          </div>
+        </a>
+
+        <a href="{{ url_for('patient_appointments') }}" class="portal-card" style="background: #f3e8ff; border-color: #e9d5ff; text-decoration: none;">
+          <div class="portal-card-icon" style="background: #7e22ce; color: #ffffff;">
+            <i class="fa fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <div class="portal-card-title" style="color: var(--secondary); font-size: 0.95rem;">Appointment History</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Track consultation timeline</div>
+          </div>
+        </a>
+
+        <a href="{{ url_for('patient_payments') }}" class="portal-card" style="background: #fef3c7; border-color: #fde68a; text-decoration: none;">
+          <div class="portal-card-icon" style="background: #d97706; color: #ffffff;">
+            <i class="fa fa-receipt"></i>
+          </div>
+          <div>
+            <div class="portal-card-title" style="color: var(--secondary); font-size: 0.95rem;">Payment Receipts</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Download tax invoices & pay</div>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- Emergency Helpline Notice -->
+      <div class="feature-card" style="padding: 1.15rem 1.5rem; background: #fff1f2; border-color: #fecdd3; margin-top: 0.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 0.85rem;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: #e11d48; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
+              <i class="fa fa-truck-medical"></i>
+            </div>
+            <div>
+              <h4 style="font-weight: 800; color: #9f1239; margin-bottom: 0.1rem; font-size: 0.9rem;">24/7 Emergency & Ambulance Helpline</h4>
+              <p style="font-size: 0.775rem; color: #be123c; margin-bottom: 0;">Immediate medical assistance: <strong>+91-9876543210</strong></p>
+            </div>
+          </div>
+          <a href="{{ url_for('patient_payment') }}" class="btn btn-sm btn-primary">
+            <i class="fa fa-credit-card"></i> Pay OPD Fee
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Section: Recent Prescriptions & Appointments Overview -->
+  <div class="form-row" style="grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+    <!-- Recent Prescriptions -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="fa fa-prescription-bottle-medical" style="color: var(--primary);"></i> Recent Prescriptions
+        </div>
+        <a href="{{ url_for('patient_prescriptions') }}" class="btn btn-outline btn-sm">
+          View All ({{ prescriptions|length }}) →
+        </a>
+      </div>
+
+      <div style="padding: 1.25rem;">
+        {% for rx in prescriptions %}
+        <div class="feature-card" style="padding: 1rem 1.25rem; margin-bottom: 0.85rem; border-left: 4px solid var(--primary); background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: var(--primary);">#RX-{{ rx['id'] }}</span>
+              <div style="font-weight: 800; color: var(--secondary); font-size: 0.95rem; margin-top: 0.1rem;">{{ rx['diagnosis'] }}</div>
+              <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.15rem;">
+                <i class="fa fa-user-doctor"></i> Dr. {{ rx['doctor_name'] }} ({{ rx['specialization'] }})
+              </div>
+            </div>
+            <a href="{{ url_for('print_prescription', prescription_id=rx['id']) }}" target="_blank" class="btn btn-primary btn-sm" title="Print Prescription">
+              <i class="fa fa-print"></i> Print
+            </a>
+          </div>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+          <i class="fa fa-file-prescription" style="font-size: 1.75rem; color: #cbd5e1; display: block; margin-bottom: 0.35rem;"></i>
+          No prescriptions issued yet.
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Recent Appointments -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="fa fa-calendar-check" style="color: #059669;"></i> Recent Consultations
+        </div>
+        <a href="{{ url_for('patient_appointments') }}" class="btn btn-outline btn-sm">
+          View All ({{ appointments|length }}) →
+        </a>
+      </div>
+
+      <div style="padding: 1.25rem;">
+        {% for appt in appointments %}
+        <div class="feature-card" style="padding: 1rem 1.25rem; margin-bottom: 0.85rem; border-left: 4px solid {% if appt['status']|lower == 'completed' %}#10b981{% elif appt['status']|lower == 'scheduled' %}#0284c7{% else %}#94a3b8{% endif %}; background: #ffffff;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span style="font-family: monospace; font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">#APT-{{ appt['id'] }}</span>
+              <div style="font-weight: 700; color: var(--secondary); font-size: 0.9rem; margin-top: 0.1rem;">
+                <i class="fa fa-calendar-day" style="color: var(--primary);"></i> {{ appt['appointment_date'] }} at {{ appt['appointment_time'] }}
+              </div>
+              <div style="font-size: 0.775rem; color: var(--text-muted); margin-top: 0.15rem;">
+                <i class="fa fa-user-doctor"></i> Dr. {{ appt['doctor_name'] }}
+              </div>
+            </div>
+
+            <div>
+              {% if appt['status']|lower == 'completed' %}
+                <span class="badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;"><i class="fa fa-circle-check"></i> Completed</span>
+              {% elif appt['status']|lower == 'scheduled' %}
+                <span class="badge badge-scheduled"><i class="fa fa-clock"></i> Scheduled</span>
+              {% else %}
+                <span class="badge badge-expired">{{ appt['status'] }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.875rem;">
+          <i class="fa fa-calendar-plus" style="font-size: 1.75rem; color: #cbd5e1; display: block; margin-bottom: 0.35rem;"></i>
+          No appointments on record. <a href="{{ url_for('book_appointment') }}">Book your first consultation →</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
 </div>
-
 {% endblock %}
-
-
-

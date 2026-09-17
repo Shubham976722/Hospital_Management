@@ -1,130 +1,86 @@
 {% extends 'layout.html' %}
 
+{% block title %}Patient Sign In | MedCare+ Hospital{% endblock %}
+
 {% block content %}
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #eaf7ff;
-  }
-  .container {
-    display: flex;
-    width: 100%;
-    min-height: 80vh;
-  }
-  .left-side {
-    flex: 1;
-    background: #d6efff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    text-align: center;
-    color: #003366;
-  }
-  .left-side h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-  }
-  .left-side p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-  }
-  .right-side {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f8fcff;
-  }
-  .login-card {
-    background: #0a369d;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
-    width: 70%;
-    max-width: 400px;
-    text-align: center;
-    color: white;
-  }
-  .login-card h2 {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-  }
-  .login-card input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 6px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-  }
-  .login-card button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #0a369d;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .login-card button:hover {
-    background: #e0e0e0;
-  }
-  .login-card a {
-    display: inline-block;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #ddd;
-    text-decoration: none;
-  }
-  .login-card a:hover { text-decoration: underline; }
-  .flash {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 0.95rem;
-  }
-  .flash.danger { background: #ffdddd; color: #d8000c; }
-  .flash.success { background: #ddffdd; color: #4f8a10; }
-  @media (max-width: 768px) {
-    .container { flex-direction: column; }
-    .left-side, .right-side {
-      flex: none; width: 100%; height: auto; padding: 20px;
-    }
-    .login-card { width: 90%; }
-  }
-</style>
+<div class="auth-wrapper">
+  <div class="auth-container">
+    
+    <!-- Left Promotional / Info Sidebar -->
+    <div class="auth-sidebar">
+      <div>
+        <div class="auth-sidebar-brand">
+          <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1.1rem;">
+            <i class="fa fa-hospital-user"></i>
+          </div>
+          <span>MedCare+ Health</span>
+        </div>
+        <h2 class="auth-sidebar-title">Welcome to Your Personal Health Portal</h2>
+        <p class="auth-sidebar-text">
+          Access your digital health records, schedule specialist appointments, track past prescriptions, and view diagnostic reports anytime.
+        </p>
 
-<div class="container">
-  <!-- Left side -->
-  <div class="left-side">
-    <h1>Welcome Patient</h1>
-    <p>Login to manage your appointments, prescriptions, and medical history.</p>
-  </div>
+        <ul class="auth-sidebar-features">
+          <li><i class="fa fa-circle-check"></i> Instant OPD appointment booking</li>
+          <li><i class="fa fa-circle-check"></i> Digital prescriptions from your doctors</li>
+          <li><i class="fa fa-circle-check"></i> Secure cashless payment via UPI & Cards</li>
+          <li><i class="fa fa-circle-check"></i> 24/7 Digital Health Card with blood group ID</li>
+        </ul>
+      </div>
 
-  <!-- Right side -->
-  <div class="right-side">
-    <div class="login-card">
-      <h2>Patient Login</h2>
+      <div style="font-size: 0.75rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1rem;">
+        <i class="fa fa-shield-halved"></i> 256-Bit Encrypted Healthcare Information System
+      </div>
+    </div>
 
-  
+    <!-- Right Login Form -->
+    <div class="auth-main">
+      <div class="auth-header">
+        <!-- Role Switching Tabs -->
+        <div class="auth-role-tabs">
+          <a href="{{ url_for('login_patient') }}" class="auth-role-tab active"><i class="fa fa-user"></i> Patient</a>
+          <a href="{{ url_for('login_doctor') }}" class="auth-role-tab"><i class="fa fa-user-doctor"></i> Doctor</a>
+          <a href="{{ url_for('login_admin') }}" class="auth-role-tab"><i class="fa fa-shield-halved"></i> Admin</a>
+        </div>
+
+        <h1 class="auth-title">Patient Sign In</h1>
+        <p class="auth-subtitle">Enter your registered email address and password to continue.</p>
+      </div>
 
       <!-- Login Form -->
       <form method="POST" action="{{ url_for('login_patient') }}">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Login</button>
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" class="form-control" placeholder="patient@example.com" required autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="form-label" for="password" style="margin-bottom: 0;">Password</label>
+            <a href="{{ url_for('patient_forgot_password') }}" style="font-size: 0.75rem; color: var(--primary); font-weight: 600;">Forgot Password?</a>
+          </div>
+          <div class="input-icon-wrapper">
+            <i class="fa fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+          <i class="fa fa-right-to-bracket"></i> Sign In to Patient Portal
+        </button>
       </form>
 
-      <a href="{{ url_for('patient_forgot_password') }}">Forgot Password?</a><br>
-      <a href="{{ url_for('index') }}">← Back</a>
+      <div style="margin-top: 1.75rem; text-align: center; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 1.25rem;">
+        New patient at MedCare+? <a href="{{ url_for('register_patient') }}" style="color: var(--primary); font-weight: 700;">Create an Account</a>
+      </div>
+      <div style="margin-top: 0.75rem; text-align: center;">
+        <a href="{{ url_for('index') }}" style="font-size: 0.8125rem; color: var(--text-muted);"><i class="fa fa-arrow-left"></i> Back to Homepage</a>
+      </div>
     </div>
+
   </div>
 </div>
 {% endblock %}

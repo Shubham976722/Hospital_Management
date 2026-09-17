@@ -1,44 +1,203 @@
 {% extends 'layout.html' %}
 
+{% block title %}Admin Dashboard & Analytics | MedCare+ Executive{% endblock %}
+
 {% block content %}
-<h2 class="text-center text-2xl font-bold mb-4">Admin Dashboard</h2>
+<div class="main-content">
+  
+  <!-- Dashboard Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0f172a, #0369a1);">
+        <i class="fa fa-chart-line"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Hospital Analytics & Management Hub</h1>
+        <div class="dashboard-role-badge">
+          <i class="fa fa-circle-check"></i> Super Administrator • Live Operations
+        </div>
+      </div>
+    </div>
 
-<div style="margin-bottom: 20px;">
-    <a href="{{ url_for('add_doctor') }}" class="btn btn-success"><i class="fa fa-user-plus"></i> Add Doctor</a>
-    <a href="{{ url_for('view_patients') }}" class="btn btn-success"><i class="fa fa-users"></i> View Patients</a>
-    <a href="{{ url_for('view_payments') }}" class="btn btn-success"><i class="fa fa-money-bill"></i> View Payments</a>
-    <a href="{{ url_for('view_appointments') }}" class="btn btn-success"><i class="fa fa-calendar"></i> View Appointments</a>
-    <a href="{{ url_for('logout_admin') }}" class="btn btn-success"><i class="fa fa-sign-out-alt"></i> Logout</a>
-</div>
+    <!-- Quick Navigation Actions -->
+    <div class="dashboard-actions">
+      <a href="{{ url_for('add_doctor') }}" class="btn btn-primary">
+        <i class="fa fa-user-plus"></i> Add New Doctor
+      </a>
+      <a href="{{ url_for('view_patients') }}" class="btn btn-outline">
+        <i class="fa fa-users"></i> Patients ({{ analytics.total_patients }})
+      </a>
+      <a href="{{ url_for('view_appointments') }}" class="btn btn-outline">
+        <i class="fa fa-calendar-days"></i> Appointments ({{ analytics.total_appointments }})
+      </a>
+      <a href="{{ url_for('view_payments') }}" class="btn btn-outline">
+        <i class="fa fa-credit-card"></i> Financial Ledger
+      </a>
+      <a href="{{ url_for('logout_admin') }}" class="btn btn-danger-outline">
+        <i class="fa fa-right-from-bracket"></i> Logout
+      </a>
+    </div>
+  </div>
 
-<table class="line-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
+  <!-- Live Financial & Operational Analytics Metric Overview Cards -->
+  <div class="metrics-row" style="margin-bottom: 2rem;">
+    
+    <!-- 1. Total Hospital Revenue -->
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Total Hospital Revenue</span>
+        <div class="metric-icon" style="background: #ecfdf5; color: #059669;">
+          <i class="fa fa-indian-rupee-sign"></i>
+        </div>
+      </div>
+      <div class="metric-value" style="color: #059669;">₹{{ "%.2f"|format(analytics.total_revenue) }}</div>
+      <div class="metric-footer" style="color: #059669;">
+        <i class="fa fa-arrow-trend-up"></i> Live calculated from patient payments
+      </div>
+    </div>
+
+    <!-- 2. Registered Patients -->
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Registered Patients</span>
+        <div class="metric-icon" style="background: #e0f2fe; color: #0284c7;">
+          <i class="fa fa-users"></i>
+        </div>
+      </div>
+      <div class="metric-value">{{ analytics.total_patients }}</div>
+      <div class="metric-footer">
+        <a href="{{ url_for('view_patients') }}" style="color: #0284c7; font-weight: 700; text-decoration: none;">
+          View patient directory →
+        </a>
+      </div>
+    </div>
+
+    <!-- 3. Total Appointments & Breakdown -->
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Clinical Consultations</span>
+        <div class="metric-icon" style="background: #f3e8ff; color: #7e22ce;">
+          <i class="fa fa-calendar-check"></i>
+        </div>
+      </div>
+      <div class="metric-value">{{ analytics.total_appointments }}</div>
+      <div class="metric-footer" style="font-size: 0.75rem;">
+        <span style="color: #0284c7; font-weight: 700;">{{ analytics.scheduled_appts }} Active</span> • 
+        <span style="color: #059669; font-weight: 700;">{{ analytics.completed_appts }} Done</span>
+      </div>
+    </div>
+
+    <!-- 4. Medical Specialists -->
+    <div class="metric-card">
+      <div class="metric-top">
+        <span>Active Medical Staff</span>
+        <div class="metric-icon" style="background: #fef3c7; color: #d97706;">
+          <i class="fa fa-user-doctor"></i>
+        </div>
+      </div>
+      <div class="metric-value">{{ analytics.total_doctors }}</div>
+      <div class="metric-footer">
+        <span style="color: var(--text-muted);">Verified Doctors & Specialists</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Medical Staff Directory Table -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-user-doctor" style="color: var(--primary);"></i> Onboarded Doctors Directory ({{ doctors|length }})
+      </div>
+      <div style="display: flex; gap: 0.75rem; align-items: center;">
+        <div style="position: relative;">
+          <i class="fa fa-magnifying-glass" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem;"></i>
+          <input type="text" id="docSearch" placeholder="Search doctor, spec..." class="form-control" onkeyup="searchDoctors()" style="padding-left: 2.25rem; padding-top: 0.35rem; padding-bottom: 0.35rem; font-size: 0.8125rem; width: 200px;">
+        </div>
+        <a href="{{ url_for('add_doctor') }}" class="btn btn-primary btn-sm">
+          <i class="fa fa-plus"></i> Onboard Doctor
+        </a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table" id="doctorsTable">
+        <thead>
+          <tr>
+            <th>Doctor ID</th>
+            <th>Doctor Name</th>
             <th>Specialization</th>
             <th>Experience</th>
-            <th>Mobile</th>
-            <th>Email</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for doctor in doctors %}
-        <tr>
-            <td>{{ doctor[0] }}</td>
-            <td>{{ doctor[1] }}</td>
-            <td>{{ doctor[2] }}</td>
-            <td>{{ doctor[3] }}</td>
-            <td>{{ doctor[4] }}</td>  <!-- Experience -->
-            <td>{{ doctor[5] }}</td>         <!-- Mobile -->
+            <th>Contact Phone</th>
+            <th>Email Address</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doctor in doctors %}
+          {% set doc_id = doctor['id'] if doctor['id'] is defined else doctor[0] %}
+          {% set doc_name = doctor['name'] if doctor['name'] is defined else doctor[1] %}
+          {% set doc_spec = doctor['specialization'] if doctor['specialization'] is defined else doctor[2] %}
+          {% set doc_exp = doctor['experience'] if doctor['experience'] is defined else doctor[3] %}
+          {% set doc_phone = doctor['mobile'] if doctor['mobile'] is defined else doctor[4] %}
+          {% set doc_email = doctor['email'] if doctor['email'] is defined else doctor[5] %}
+          <tr class="doc-row">
             <td>
-                <form action="{{ url_for('delete_doctor', doctor_id=doctor[0]) }}" method="post" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure?')" class="btn btn-danger">Delete</button>
-                </form>
+              <span style="font-family: monospace; font-weight: 700; color: var(--text-muted);">#DOC-{{ doc_id }}</span>
             </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8125rem;">
+                  {{ doc_name[:2] }}
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);">Dr. {{ doc_name }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-specialization">
+                <i class="fa fa-stethoscope"></i> {{ doc_spec }}
+              </span>
+            </td>
+            <td>
+              <span style="font-weight: 600; color: var(--text-main);">{{ doc_exp }} Years</span>
+            </td>
+            <td>
+              <span style="font-family: monospace; color: var(--text-muted);">+91 {{ doc_phone }}</span>
+            </td>
+            <td>
+              <span style="color: var(--text-muted);">{{ doc_email }}</span>
+            </td>
+            <td style="text-align: right;">
+              <form action="{{ url_for('delete_doctor', doctor_id=doc_id) }}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to remove Dr. {{ doc_name }} from the hospital directory?')" class="btn btn-danger-outline btn-sm">
+                  <i class="fa fa-trash-can"></i> Remove
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+              <i class="fa fa-user-doctor" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 0.5rem; display: block;"></i>
+              No doctors found in directory. Click "Onboard Doctor" to add.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function searchDoctors() {
+  const q = document.getElementById('docSearch').value.toLowerCase();
+  document.querySelectorAll('.doc-row').forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
 {% endblock %}

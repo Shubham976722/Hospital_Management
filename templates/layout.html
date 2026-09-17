@@ -1,51 +1,305 @@
 <!-- templates/layout.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <title>Hospital Management System</title>
+  <title>{% block title %}MedCare+ | Premier Hospital & Healthcare{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts & Font Awesome 6 Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main Professional Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
-
-  <!-- Top Contact Bar -->
+<body>
+  <!-- Top Emergency & Quick Contact Bar (Desktop) -->
   <div class="top-bar">
-    <div class="left">
-      📞 <a href="tel:+919876543210">+91-9876543210</a>
-    </div>
-    <div class="right">
-      ✉ <a href="mailto:contact@hospital.com?subject=Appointment Inquiry&body=Hello, I want to book an appointment.">
-        contact@hospital.com
-      </a>
+    <div class="top-bar-inner">
+      <div style="display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;">
+        <span class="emergency-badge"><i class="fa fa-phone-volume"></i> 24/7 Emergency: +91-9876543210</span>
+        <a href="mailto:contact@hospital.com?subject=Inquiry"><i class="fa fa-envelope"></i> contact@hospital.com</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span style="font-size: 0.75rem; color: #bae6fd;"><i class="fa fa-clock"></i> OPD Hours: 8:00 AM – 8:00 PM</span>
+        <a href="https://www.google.com/maps/place/Warkad+Hospital/@19.8587013,75.8884777,17z" target="_blank">
+          <i class="fa fa-location-dot"></i> Jalna, MH
+        </a>
+      </div>
     </div>
   </div>
 
-  <!-- Main Page Wrapper -->
-  <div class="page-wrapper">
+  <!-- Main Healthcare Navigation Bar -->
+  <header class="site-header">
+    <div class="navbar-container">
+      <a href="{{ url_for('index') }}" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa fa-hospital-user"></i>
+        </div>
+        <div>
+          <div class="brand-title">Med<span>Care+</span></div>
+          <span class="brand-subtitle">Hospital & Research</span>
+        </div>
+      </a>
 
-    <!-- Main Page Content -->
+      <!-- Desktop Nav Links -->
+      <ul class="nav-links">
+        <li><a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"><i class="fa fa-house"></i> Home</a></li>
+        <li><a href="{{ url_for('index') }}#departments" class="nav-link"><i class="fa fa-stethoscope"></i> Departments</a></li>
+        <li><a href="{{ url_for('index') }}#doctors" class="nav-link"><i class="fa fa-user-doctor"></i> Doctors</a></li>
+        <li><a href="{{ url_for('index') }}#services" class="nav-link"><i class="fa fa-hand-holding-medical"></i> Services</a></li>
+        <li><a href="{{ url_for('index') }}#faq" class="nav-link"><i class="fa fa-circle-question"></i> FAQ</a></li>
+        
+        {% if session.get('admin') %}
+          <li><a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if request.endpoint and 'admin' in request.endpoint %}active{% endif %}"><i class="fa fa-shield-halved"></i> Admin Hub</a></li>
+        {% elif session.get('doctor_id') or session.get('doctor') %}
+          <li><a href="{{ url_for('doctor_dashboard') }}" class="nav-link {% if request.endpoint and 'doctor' in request.endpoint %}active{% endif %}"><i class="fa fa-user-doctor"></i> Doctor Desk</a></li>
+        {% elif session.get('patient') or session.get('user_id') %}
+          <li><a href="{{ url_for('patient_dashboard') }}" class="nav-link {% if request.endpoint and 'patient' in request.endpoint %}active{% endif %}"><i class="fa fa-bed-pulse"></i> Patient Portal</a></li>
+        {% endif %}
+      </ul>
+
+      <!-- Action Buttons Contextual to Role -->
+      <div class="nav-actions">
+        {% if session.get('admin') %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary btn-sm"><i class="fa fa-shield-halved"></i> Admin Hub</a>
+            <a href="{{ url_for('logout_admin') }}" class="btn btn-danger-outline btn-sm"><i class="fa fa-right-from-bracket"></i> Logout</a>
+          </div>
+        {% elif session.get('doctor_id') or session.get('doctor') %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline-primary btn-sm" title="Doctor Desk">
+              <i class="fa fa-user-doctor"></i> {% if session.get('doctor_name', '').startswith('Dr.') or session.get('doctor_name', '').startswith('Dr ') %}{{ session.get('doctor_name') }}{% else %}Dr. {{ session.get('doctor_name', 'Doctor') }}{% endif %}
+            </a>
+            <a href="{{ url_for('logout_doctor') }}" class="btn btn-danger-outline btn-sm" title="Log Out">
+              <i class="fa fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        {% elif session.get('patient') or session.get('user_id') %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-outline-primary btn-sm" title="Patient Portal">
+              <i class="fa fa-user"></i> {{ session.get('patient_name', 'Patient') }}
+            </a>
+            <a href="{{ url_for('logout_patient') }}" class="btn btn-danger-outline btn-sm" title="Log Out">
+              <i class="fa fa-right-from-bracket"></i> Logout
+            </a>
+          </div>
+        {% else %}
+          <a href="{{ url_for('login_patient') }}" class="btn btn-outline btn-sm"><i class="fa fa-lock"></i> Sign In</a>
+          <a href="{{ url_for('register_patient') }}" class="btn btn-primary btn-sm"><i class="fa fa-user-plus"></i> Register</a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Hamburger Menu Button -->
+      <button class="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Open Navigation Menu">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileNav()"></div>
+  <aside class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div>
+      <div class="mobile-drawer-header">
+        <div class="brand-logo">
+          <div class="brand-icon" style="width: 36px; height: 36px; font-size: 1rem;">
+            <i class="fa fa-hospital-user"></i>
+          </div>
+          <div class="brand-title" style="font-size: 1.15rem;">Med<span>Care+</span></div>
+        </div>
+        <button onclick="toggleMobileNav()" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer;">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+
+      <ul class="mobile-nav-list">
+        <li><a href="{{ url_for('index') }}" onclick="toggleMobileNav()"><i class="fa fa-house" style="color: var(--primary);"></i> Home</a></li>
+        <li><a href="{{ url_for('index') }}#departments" onclick="toggleMobileNav()"><i class="fa fa-stethoscope" style="color: var(--primary);"></i> Departments</a></li>
+        <li><a href="{{ url_for('index') }}#doctors" onclick="toggleMobileNav()"><i class="fa fa-user-doctor" style="color: var(--primary);"></i> Doctors</a></li>
+        <li><a href="{{ url_for('index') }}#services" onclick="toggleMobileNav()"><i class="fa fa-hand-holding-medical" style="color: var(--primary);"></i> Operations & Services</a></li>
+        <li><a href="{{ url_for('index') }}#faq" onclick="toggleMobileNav()"><i class="fa fa-circle-question" style="color: var(--primary);"></i> FAQ</a></li>
+
+        {% if session.get('admin') %}
+          <li><a href="{{ url_for('admin_dashboard') }}"><i class="fa fa-shield-halved" style="color: var(--primary);"></i> Admin Dashboard</a></li>
+          <li><a href="{{ url_for('logout_admin') }}" style="color: var(--danger);"><i class="fa fa-right-from-bracket"></i> Logout Admin</a></li>
+        {% elif session.get('doctor_id') or session.get('doctor') %}
+          <li><a href="{{ url_for('doctor_dashboard') }}"><i class="fa fa-user-doctor" style="color: var(--primary);"></i> Dr. {{ session.get('doctor_name', 'Doctor') }} Desk</a></li>
+          <li><a href="{{ url_for('doctor_appointments') }}"><i class="fa fa-calendar-check" style="color: var(--primary);"></i> Appointments Queue</a></li>
+          <li><a href="{{ url_for('doctor_prescriptions') }}"><i class="fa fa-prescription" style="color: var(--primary);"></i> Write Prescription</a></li>
+          <li><a href="{{ url_for('logout_doctor') }}" style="color: var(--danger);"><i class="fa fa-right-from-bracket"></i> Logout Doctor</a></li>
+        {% elif session.get('patient') or session.get('user_id') %}
+          <li><a href="{{ url_for('patient_dashboard') }}"><i class="fa fa-bed-pulse" style="color: var(--primary);"></i> Patient Portal</a></li>
+          <li><a href="{{ url_for('book_appointment') }}"><i class="fa fa-calendar-plus" style="color: var(--primary);"></i> Book Appointment</a></li>
+          <li><a href="{{ url_for('patient_prescriptions') }}"><i class="fa fa-prescription" style="color: var(--primary);"></i> My Prescriptions</a></li>
+          <li><a href="{{ url_for('patient_appointments') }}"><i class="fa fa-clock-rotate-left" style="color: var(--primary);"></i> Appointment History</a></li>
+          <li><a href="{{ url_for('patient_payments') }}"><i class="fa fa-receipt" style="color: var(--primary);"></i> Payment Receipts</a></li>
+          <li><a href="{{ url_for('logout_patient') }}" style="color: var(--danger);"><i class="fa fa-right-from-bracket"></i> Logout</a></li>
+        {% else %}
+          <li><a href="{{ url_for('login_patient') }}"><i class="fa fa-user" style="color: var(--primary);"></i> Patient Login</a></li>
+          <li><a href="{{ url_for('login_doctor') }}"><i class="fa fa-user-doctor" style="color: var(--primary);"></i> Doctor Login</a></li>
+          <li><a href="{{ url_for('login_admin') }}"><i class="fa fa-shield-halved" style="color: var(--primary);"></i> Admin Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+
+    <div>
+      {% if not session.get('patient') and not session.get('user_id') and not session.get('doctor') and not session.get('doctor_id') and not session.get('admin') %}
+        <a href="{{ url_for('register_patient') }}" class="btn btn-primary btn-block" style="margin-bottom: 0.75rem;">
+          <i class="fa fa-user-plus"></i> New Patient Sign Up
+        </a>
+      {% endif %}
+      <a href="tel:+919876543210" class="btn btn-danger btn-block">
+        <i class="fa fa-phone-volume"></i> 24/7 Emergency Helpline
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile Floating Emergency Quick Dial -->
+  <a href="tel:+919876543210" class="mobile-floating-emergency" title="Emergency Hotline">
+    <i class="fa fa-phone-volume"></i> Emergency Call
+  </a>
+
+  <!-- Flash Message Container -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              {% if category == 'success' %}
+                <i class="fa fa-circle-check"></i>
+              {% elif category == 'danger' or category == 'error' %}
+                <i class="fa fa-circle-exclamation"></i>
+              {% elif category == 'warning' %}
+                <i class="fa fa-triangle-exclamation"></i>
+              {% else %}
+                <i class="fa fa-circle-info"></i>
+              {% endif %}
+              <span>{{ message }}</span>
+            </div>
+            <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Page Content Body -->
+  <main class="page-wrapper">
     {% block content %}{% endblock %}
+  </main>
 
-    <!-- Footer -->
-    <footer class="footer-strip">
-      🏥 <a
-        href="https://www.google.com/maps/place/Warkad+Hospital/@19.854072,75.8866978,1816m/data=!3m1!1e3!4m6!3m5!1s0x3bda50ad54e5932d:0x3952879cfa2c5891!8m2!3d19.8587013!4d75.8884777!16s%2Fg%2F1hg4t21j7?entry=ttu&g_ep=EgoyMDI1MDcxMy4wIKXMDSoASAFQAw%3D%3D"
-        target="_blank" style="color: inherit; text-decoration: none;">
-        Jai Shankar Nagar, Shree Krishna Nagar, Jalna, Maharashtra 431203
-      </a>
-    </footer>
+  <!-- Modern Hospital Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-col">
+        <div class="brand-logo" style="color: #ffffff; margin-bottom: 1rem;">
+          <div class="brand-icon" style="width: 36px; height: 36px; font-size: 1rem;">
+            <i class="fa fa-hospital"></i>
+          </div>
+          <div>
+            <div class="brand-title" style="color: #ffffff;">Med<span style="color: #38bdf8;">Care+</span></div>
+          </div>
+        </div>
+        <p>Comprehensive healthcare center committed to clinical excellence, patient-first compassion, and world-class digital hospital management.</p>
+        <div style="font-size: 0.8125rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.35rem;">
+          <span><i class="fa fa-phone" style="color: #38bdf8; width: 18px;"></i> +91-9876543210</span>
+          <span><i class="fa fa-envelope" style="color: #38bdf8; width: 18px;"></i> contact@hospital.com</span>
+          <span><i class="fa fa-hospital" style="color: #38bdf8; width: 18px;"></i> NABH Certified & Accredited</span>
+        </div>
+      </div>
 
-  </div>
+      <div class="footer-col">
+        <h4>Medical Specialties</h4>
+        <ul class="footer-links">
+          <li><a href="#departments"><i class="fa fa-chevron-right" style="font-size: 0.7rem; color: #38bdf8;"></i> Cardiology & Heart Care</a></li>
+          <li><a href="#departments"><i class="fa fa-chevron-right" style="font-size: 0.7rem; color: #38bdf8;"></i> Neurology & Brain Center</a></li>
+          <li><a href="#departments"><i class="fa fa-chevron-right" style="font-size: 0.7rem; color: #38bdf8;"></i> Digital Radiology / X-Ray</a></li>
+          <li><a href="#departments"><i class="fa fa-chevron-right" style="font-size: 0.7rem; color: #38bdf8;"></i> 24/7 Smart Pharmacy</a></li>
+          <li><a href="#departments"><i class="fa fa-chevron-right" style="font-size: 0.7rem; color: #38bdf8;"></i> Trauma & Intensive Care (ICU)</a></li>
+        </ul>
+      </div>
 
-  <body class="{% if request.endpoint != 'index' %}with-background{% endif %}">
-    
+      <div class="footer-col">
+        <h4>Portals & Links</h4>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('login_admin') }}"><i class="fa fa-shield-halved" style="font-size: 0.75rem; color: #38bdf8;"></i> Admin Portal</a></li>
+          <li><a href="{{ url_for('login_doctor') }}"><i class="fa fa-user-doctor" style="font-size: 0.75rem; color: #38bdf8;"></i> Doctor Desk</a></li>
+          <li><a href="{{ url_for('login_patient') }}"><i class="fa fa-user-check" style="font-size: 0.75rem; color: #38bdf8;"></i> Patient Sign In</a></li>
+          <li><a href="{{ url_for('register_patient') }}"><i class="fa fa-user-plus" style="font-size: 0.75rem; color: #38bdf8;"></i> New Patient Registration</a></li>
+          <li><a href="#faq"><i class="fa fa-circle-question" style="font-size: 0.75rem; color: #38bdf8;"></i> Patient Help & FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Hospital Location</h4>
+        <p>Jai Shankar Nagar, Shree Krishna Nagar, Jalna, Maharashtra 431203</p>
+        <a href="https://www.google.com/maps/place/Warkad+Hospital/@19.8587013,75.8884777,17z" target="_blank" class="btn btn-outline btn-sm" style="color: #ffffff; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); margin-top: 0.5rem;">
+          <i class="fa fa-map-location-dot"></i> View on Google Maps
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <div>
+          &copy; 2026 MedCare+ Hospital Management System. All Rights Reserved.
+        </div>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/shubham-mhaske-753a53269/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+          <a href="https://x.com/Shubham97033057" target="_blank" class="social-icon" title="Twitter / X"><i class="fab fa-x-twitter"></i></a>
+          <a href="https://www.instagram.com/its_sbm_1010/" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.facebook.com/shubham.mhaske.334491" target="_blank" class="social-icon" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================
+       CLIENT-SIDE INTERACTIVITY: MOBILE DRAWER & SCROLL-TRIGGERED REVEAL
+       =================================================================== -->
+  <script>
+    // Mobile Navigation Drawer Toggle
+    function toggleMobileNav() {
+      const drawer = document.getElementById('mobileNavDrawer');
+      const overlay = document.getElementById('mobileNavOverlay');
+      if (drawer && overlay) {
+        drawer.classList.toggle('open');
+        overlay.classList.toggle('open');
+      }
+    }
+
+    // Scroll Reveal Animations via Intersection Observer
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+      
+      if ('IntersectionObserver' in window) {
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -50px 0px',
+          threshold: 0.15
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        revealElements.forEach(el => revealObserver.observe(el));
+      } else {
+        // Fallback for older browsers
+        revealElements.forEach(el => el.classList.add('active'));
+      }
+    });
+  </script>
 </body>
-</body>
-
 </html>

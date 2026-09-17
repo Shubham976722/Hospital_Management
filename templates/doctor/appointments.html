@@ -1,43 +1,193 @@
 {% extends 'layout.html' %}
 
-{% block content %}
-<h2 style="text-align: center;">Appointments</h2>
+{% block title %}Patient Appointments Schedule | MedCare+ Clinician{% endblock %}
 
-<!-- Square Back Button -->
-<div style="text-align: center; margin-bottom: 10px;">
-  <a href="{{ url_for('doctor_dashboard') }}" style="display: inline-block;
-      text-decoration: none;
-      border: 2px solid #6c63ff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      background-color: #e6e6ff;
-      color: #6c63ff;
-      font-weight: bold;">
-    ← Back
-  </a>
+{% block content %}
+<div class="main-content">
+  
+  <!-- Dashboard Top Header Bar -->
+  <div class="dashboard-header">
+    <div class="dashboard-user-info">
+      <div class="dashboard-avatar" style="background: linear-gradient(135deg, #0284c7, #064e3b);">
+        <i class="fa fa-calendar-check"></i>
+      </div>
+      <div>
+        <h1 class="dashboard-title">Doctor Consultation Schedule</h1>
+        <div class="dashboard-role-badge" style="background: #e0f2fe; color: #0369a1;">
+          <i class="fa fa-stethoscope"></i> Patient Appointment Queue • Active Desk
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-actions">
+      <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline">
+        <i class="fa fa-arrow-left"></i> Doctor Desk
+      </a>
+      <a href="{{ url_for('doctor_prescriptions') }}" class="btn btn-primary">
+        <i class="fa fa-prescription"></i> Write Prescription
+      </a>
+    </div>
+  </div>
+
+  <!-- Filter & Search Controls -->
+  <div class="feature-card" style="padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="statusFilters">
+      <button type="button" class="btn btn-sm btn-primary filter-btn active" onclick="filterAppointments('all', this)">
+        All ({{ appointments|length }})
+      </button>
+      <button type="button" class="btn btn-sm btn-outline filter-btn" onclick="filterAppointments('scheduled', this)">
+        <i class="fa fa-clock text-sky-500"></i> Scheduled
+      </button>
+      <button type="button" class="btn btn-sm btn-outline filter-btn" onclick="filterAppointments('completed', this)">
+        <i class="fa fa-circle-check text-emerald-500"></i> Completed
+      </button>
+    </div>
+
+    <div style="position: relative; min-width: 260px;">
+      <i class="fa fa-magnifying-glass" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+      <input type="text" id="apptSearch" class="form-control" placeholder="Search patient name, ID..." onkeyup="searchAppointments()" style="padding-left: 2.5rem; padding-top: 0.45rem; padding-bottom: 0.45rem; font-size: 0.875rem;">
+    </div>
+  </div>
+
+  <!-- Appointments Table Card -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">
+        <i class="fa fa-calendar-days" style="color: var(--primary);"></i> Assigned Patient Appointments ({{ appointments|length }})
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--text-muted);">
+        <i class="fa fa-circle-info text-sky-500"></i> Click <strong>Prescribe</strong> to write e-Rx & auto-complete consultation
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table" id="apptTable">
+        <thead>
+          <tr>
+            <th>Token ID</th>
+            <th>Patient Details</th>
+            <th>Date & Time</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th style="text-align: right; min-width: 260px;">Clinical Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt in appointments %}
+          <tr data-status="{{ appt['status']|lower }}" class="appt-row">
+            <td>
+              <span style="font-family: monospace; font-weight: 700; color: var(--primary);">#APT-{{ appt['id'] }}</span>
+            </td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8125rem; flex-shrink: 0;">
+                  {{ appt['patient_name'][:2] }}
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: var(--text-main);">{{ appt['patient_name'] }}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-muted);">
+                    {{ appt['age'] }} Yrs • {{ appt['gender'] }} {% if appt['blood_group'] %}• <span style="color: #e11d48; font-weight: 700;">{{ appt['blood_group'] }}</span>{% endif %}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="color: var(--text-main); font-weight: 700; font-size: 0.875rem;">
+                <i class="fa fa-calendar" style="font-size: 0.75rem; color: var(--primary);"></i> {{ appt['appointment_date'] }}
+              </div>
+              <div style="font-family: monospace; color: var(--text-muted); font-size: 0.8125rem; margin-top: 0.15rem;">
+                <i class="fa fa-clock" style="font-size: 0.75rem; color: #94a3b8;"></i> {{ appt['appointment_time'] }}
+              </div>
+            </td>
+            <td>
+              <span style="font-family: monospace; font-size: 0.8125rem; color: var(--text-muted);">
+                <i class="fa fa-phone" style="font-size: 0.75rem; color: #94a3b8;"></i> +91 {{ appt['mobile'] }}
+              </span>
+            </td>
+            <td>
+              {% if appt['status']|lower == 'completed' %}
+                <span class="badge" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">
+                  <i class="fa fa-circle-check"></i> Completed
+                </span>
+              {% elif appt['status']|lower == 'scheduled' %}
+                <span class="badge badge-scheduled">
+                  <i class="fa fa-clock"></i> Scheduled
+                </span>
+              {% elif appt['status']|lower == 'expired' %}
+                <span class="badge badge-expired">
+                  <i class="fa fa-circle-xmark"></i> Expired
+                </span>
+              {% else %}
+                <span class="badge badge-info">
+                  <i class="fa fa-circle-info"></i> {{ appt['status'] }}
+                </span>
+              {% endif %}
+            </td>
+            <td style="text-align: right;">
+              <div style="display: inline-flex; gap: 0.4rem; justify-content: flex-end; align-items: center;">
+                <!-- 1-Click Prescribe Shortcut -->
+                <a href="{{ url_for('doctor_prescriptions', patient_id=appt['patient_id'], appointment_id=appt['id']) }}" class="btn btn-primary btn-sm" title="Prescribe & Complete">
+                  <i class="fa fa-prescription"></i> Prescribe
+                </a>
+
+                <!-- Patient Clinical History Lookup -->
+                <a href="{{ url_for('doctor_patient_history', patient_id=appt['patient_id']) }}" class="btn btn-outline btn-sm" title="Patient EHR History">
+                  <i class="fa fa-folder-open"></i> History
+                </a>
+
+                <!-- Mark Completed Button (if scheduled) -->
+                {% if appt['status']|lower == 'scheduled' %}
+                <form action="{{ url_for('complete_appointment', appt_id=appt['id']) }}" method="POST" style="display:inline;" onsubmit="return confirm('Mark this consultation as Completed?');">
+                  <button type="submit" class="btn btn-sm" style="background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;" title="Mark as Completed">
+                    <i class="fa fa-check"></i> Done
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 3.5rem; color: var(--text-muted);">
+              <i class="fa fa-calendar-check" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 0.75rem; display: block;"></i>
+              <h4 style="font-weight: 700; color: var(--secondary);">No Appointments Scheduled</h4>
+              <p style="font-size: 0.875rem;">Your consultation queue is clear. New patient bookings will appear here in real time.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
-<table style="margin: auto; border-collapse: collapse; width: 70%;">
-  <tr style="background-color: #d9f2f9;">
-    <th style="padding: 12px; border: 1px solid #ccc;">ID</th>
-    <th style="padding: 12px; border: 1px solid #ccc;">Patient</th>
-    <th style="padding: 12px; border: 1px solid #ccc;">Date</th>
-    <th style="padding: 12px; border: 1px solid #ccc;">Time</th>
-    <th style="padding: 12px; border: 1px solid #ccc;">Status</th>
-  </tr>
-  {% for appt in appointments %}
-  <tr style="text-align: center; 
-             {% if appt[4] == 'Expired' %}background-color: #ffcccc;{% endif %}">
-    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[0] }}</td>
-    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[1] }}</td>
-    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[2] }}</td>
-    <td style="padding: 10px; border: 1px solid #ccc;">{{ appt[3] }}</td>
-    <td style="padding: 10px; border: 1px solid #ccc;
-               font-weight: bold;
-               {% if appt[4] == 'Expired' %}color: red;{% else %}color: green;{% endif %}">
-      {{ appt[4] }}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<script>
+function filterAppointments(status, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.remove('btn-primary', 'active');
+    b.classList.add('btn-outline');
+  });
+  btn.classList.remove('btn-outline');
+  btn.classList.add('btn-primary', 'active');
+
+  const rows = document.querySelectorAll('.appt-row');
+  rows.forEach(row => {
+    if (status === 'all' || row.getAttribute('data-status') === status) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+
+function searchAppointments() {
+  const query = document.getElementById('apptSearch').value.toLowerCase();
+  const rows = document.querySelectorAll('.appt-row');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+</script>
 {% endblock %}

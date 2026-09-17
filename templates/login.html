@@ -1,79 +1,59 @@
-
-<!-- templates/login.html -->
 {% extends 'layout.html' %}
 
+{% block title %}Hospital Portal Sign In | MedCare+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-  <div class="card shadow-lg p-4" style="max-width: 420px; width: 100%;">
-    <h2 class="text-center mb-4">Login</h2>
-
-    <!-- Tabs for role selection -->
-    <ul class="nav nav-tabs mb-3" id="roleTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin" type="button" role="tab">Admin</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="doctor-tab" data-bs-toggle="tab" data-bs-target="#doctor" type="button" role="tab">Doctor</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="patient-tab" data-bs-toggle="tab" data-bs-target="#patient" type="button" role="tab">Patient</button>
-      </li>
-    </ul>
-
-    <!-- Tab contents -->
-    <div class="tab-content" id="roleTabsContent">
-
-      <!-- Admin Login -->
-      <div class="tab-pane fade show active" id="admin" role="tabpanel">
-        <form method="POST" action="{{ url_for('login_admin') }}">
-          <div class="mb-3">
-            <label for="admin-username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="admin-username" name="username" placeholder="Enter username" required>
-          </div>
-          <div class="mb-3">
-            <label for="admin-password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="admin-password" name="password" placeholder="Enter password" required>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
+<div class="auth-wrapper">
+  <div class="auth-container" style="max-width: 600px; grid-template-columns: 1fr;">
+    <div class="auth-main">
+      <div class="auth-header" style="text-align: center;">
+        <div class="brand-icon" style="margin: 0 auto 1rem; width: 48px; height: 48px; font-size: 1.35rem;">
+          <i class="fa fa-hospital-user"></i>
+        </div>
+        <h1 class="auth-title">Select Portal to Sign In</h1>
+        <p class="auth-subtitle">Choose your access role to proceed to the secure login desk.</p>
       </div>
 
-      <!-- Doctor Login -->
-      <div class="tab-pane fade" id="doctor" role="tabpanel">
-        <form method="POST" action="{{ url_for('login_doctor') }}">
-          <div class="mb-3">
-            <label for="doctor-email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="doctor-email" name="email" placeholder="Enter email" required>
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+        <a href="{{ url_for('login_patient') }}" class="portal-card" style="background: var(--bg-subtle); border-color: var(--border); color: var(--text-main); flex-direction: row; align-items: center; gap: 1rem;">
+          <div class="portal-card-icon" style="background: var(--primary-light); color: var(--primary);">
+            <i class="fa fa-user"></i>
           </div>
-          <div class="mb-3">
-            <label for="doctor-password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="doctor-password" name="password" placeholder="Enter password" required>
+          <div style="flex: 1;">
+            <div class="portal-card-title" style="color: var(--secondary);">Patient Sign In</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Book appointments, view prescriptions & bills</div>
           </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Login</button>
+          <i class="fa fa-chevron-right" style="color: var(--text-subtle);"></i>
+        </a>
+
+        <a href="{{ url_for('login_doctor') }}" class="portal-card" style="background: var(--bg-subtle); border-color: var(--border); color: var(--text-main); flex-direction: row; align-items: center; gap: 1rem;">
+          <div class="portal-card-icon" style="background: #e0f2fe; color: #0284c7;">
+            <i class="fa fa-user-doctor"></i>
           </div>
-        </form>
+          <div style="flex: 1;">
+            <div class="portal-card-title" style="color: var(--secondary);">Doctor Desk</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Manage patient appointments & write prescriptions</div>
+          </div>
+          <i class="fa fa-chevron-right" style="color: var(--text-subtle);"></i>
+        </a>
+
+        <a href="{{ url_for('login_admin') }}" class="portal-card" style="background: var(--bg-subtle); border-color: var(--border); color: var(--text-main); flex-direction: row; align-items: center; gap: 1rem;">
+          <div class="portal-card-icon" style="background: #ede9fe; color: #6366f1;">
+            <i class="fa fa-shield-halved"></i>
+          </div>
+          <div style="flex: 1;">
+            <div class="portal-card-title" style="color: var(--secondary);">Admin Portal</div>
+            <div class="portal-card-desc" style="color: var(--text-muted);">Hospital management, staff records & analytics</div>
+          </div>
+          <i class="fa fa-chevron-right" style="color: var(--text-subtle);"></i>
+        </a>
       </div>
 
-      <!-- Patient Login -->
-      <div class="tab-pane fade" id="patient" role="tabpanel">
-        <form method="POST" action="{{ url_for('login_patient') }}">
-          <div class="mb-3">
-            <label for="patient-email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="patient-email" name="email" placeholder="Enter email" required>
-          </div>
-          <div class="mb-3">
-            <label for="patient-password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="patient-password" name="password" placeholder="Enter password" required>
-          </div>
-          <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
+      <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border); padding-top: 1.25rem;">
+        <a href="{{ url_for('register_patient') }}" class="btn btn-outline-primary btn-block">
+          <i class="fa fa-user-plus"></i> Register as New Patient
+        </a>
       </div>
-
     </div>
   </div>
 </div>
