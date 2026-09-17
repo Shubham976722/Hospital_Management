@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2>Update Profile</h2>
+<form method="POST">
+    <label>Name:</label>
+    <input type="text" name="name" value="{{ doctor.name }}"><br>
+    <label>Specialization:</label>
+    <input type="text" name="specialization" value="{{ doctor.specialization }}"><br>
+    <label>Email:</label>
+    <input type="text" name="email" value="{{ doctor.email }}"><br>
+    <button type="submit">Update</button>
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 style="text-align:center;">All Payments</h2>
+
+<table border="1" style="margin:auto; border-collapse: collapse; width:80%;">
+    <tr style="background:#eee; text-align:center;">
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Amount</th>
+        <th>Date</th>
+    </tr>
+    {% for pay in payments %}
+    <tr style="text-align:center;">
+        <td>{{ pay[0] }}</td>   {# payment id #}
+        <td>{{ pay[1] }}</td>   {# patient name #}
+        <td>₹{{ pay[2] }}</td>  {# amount #}
+        <td>{{ pay[3] }}</td>   {# created_at #}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
